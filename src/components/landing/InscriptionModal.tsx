@@ -102,12 +102,12 @@ export const InscriptionModal = ({ isOpen, onClose }: InscriptionModalProps) => 
         nom_complet: formData.nomComplet,
         email: formData.email,
         telephone: formData.telephone,
-        niveau_experience: formData.niveauExperience,
+        niveau_experience: formData.niveauExperience as 'Débutant' | 'Intermédiaire' | 'Avancé',
         motivation: formData.motivation || null,
         montant_paye: calculatePrice(),
-        pourcentage_paye: formData.pourcentagePaye,
+        pourcentage_paye: formData.pourcentagePaye as '25' | '50' | '100',
         code_promo: promoApplied?.code || null,
-        statut: 'Confirmé',
+        statut: 'Confirmé' as const,
         transaction_id: transactionId,
       });
 
