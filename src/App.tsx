@@ -1,23 +1,34 @@
+import { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { Loader2 } from "lucide-react";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import PaymentCallback from "./pages/PaymentCallback";
-import AdminLogin from "./pages/admin/AdminLogin";
-import AdminDashboard from "./pages/admin/AdminDashboard";
-import AdminSeminar from "./pages/admin/AdminSeminar";
-import AdminProgram from "./pages/admin/AdminProgram";
-import AdminBenefits from "./pages/admin/AdminBenefits";
-import AdminPromoCodes from "./pages/admin/AdminPromoCodes";
-import AdminInscriptions from "./pages/admin/AdminInscriptions";
-import AdminFooter from "./pages/admin/AdminFooter";
-import AdminFiles from "./pages/admin/AdminFiles";
-import AdminLogos from "./pages/admin/AdminLogos";
 import { AdminLayout } from "./components/admin/AdminLayout";
 import { ProtectedRoute } from "./components/admin/ProtectedRoute";
+
+// Lazy load admin pages
+const AdminLogin = lazy(() => import("./pages/admin/AdminLogin"));
+const AdminDashboard = lazy(() => import("./pages/admin/AdminDashboard"));
+const AdminSeminar = lazy(() => import("./pages/admin/AdminSeminar"));
+const AdminProgram = lazy(() => import("./pages/admin/AdminProgram"));
+const AdminBenefits = lazy(() => import("./pages/admin/AdminBenefits"));
+const AdminPromoCodes = lazy(() => import("./pages/admin/AdminPromoCodes"));
+const AdminInscriptions = lazy(() => import("./pages/admin/AdminInscriptions"));
+const AdminFooter = lazy(() => import("./pages/admin/AdminFooter"));
+const AdminFiles = lazy(() => import("./pages/admin/AdminFiles"));
+const AdminLogos = lazy(() => import("./pages/admin/AdminLogos"));
+
+// Loading fallback component
+const AdminPageLoader = () => (
+  <div className="flex items-center justify-center min-h-screen">
+    <Loader2 className="w-8 h-8 animate-spin text-primary" />
+  </div>
+);
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -51,18 +62,88 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/payment-callback" element={<PaymentCallback />} />
-          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route 
+            path="/admin/login" 
+            element={
+              <Suspense fallback={<AdminPageLoader />}>
+                <AdminLogin />
+              </Suspense>
+            } 
+          />
           <Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
-            <Route index element={<AdminDashboard />} />
-            <Route path="seminar" element={<AdminSeminar />} />
-            <Route path="program" element={<AdminProgram />} />
-            <Route path="benefits" element={<AdminBenefits />} />
-              <Route path="promo-codes" element={<AdminPromoCodes />} />
-              <Route path="inscriptions" element={<AdminInscriptions />} />
-              <Route path="footer" element={<AdminFooter />} />
-              <Route path="files" element={<AdminFiles />} />
-              <Route path="logos" element={<AdminLogos />} />
-            </Route>
+            <Route 
+              index 
+              element={
+                <Suspense fallback={<AdminPageLoader />}>
+                  <AdminDashboard />
+                </Suspense>
+              } 
+            />
+            <Route 
+              path="seminar" 
+              element={
+                <Suspense fallback={<AdminPageLoader />}>
+                  <AdminSeminar />
+                </Suspense>
+              } 
+            />
+            <Route 
+              path="program" 
+              element={
+                <Suspense fallback={<AdminPageLoader />}>
+                  <AdminProgram />
+                </Suspense>
+              } 
+            />
+            <Route 
+              path="benefits" 
+              element={
+                <Suspense fallback={<AdminPageLoader />}>
+                  <AdminBenefits />
+                </Suspense>
+              } 
+            />
+            <Route 
+              path="promo-codes" 
+              element={
+                <Suspense fallback={<AdminPageLoader />}>
+                  <AdminPromoCodes />
+                </Suspense>
+              } 
+            />
+            <Route 
+              path="inscriptions" 
+              element={
+                <Suspense fallback={<AdminPageLoader />}>
+                  <AdminInscriptions />
+                </Suspense>
+              } 
+            />
+            <Route 
+              path="footer" 
+              element={
+                <Suspense fallback={<AdminPageLoader />}>
+                  <AdminFooter />
+                </Suspense>
+              } 
+            />
+            <Route 
+              path="files" 
+              element={
+                <Suspense fallback={<AdminPageLoader />}>
+                  <AdminFiles />
+                </Suspense>
+              } 
+            />
+            <Route 
+              path="logos" 
+              element={
+                <Suspense fallback={<AdminPageLoader />}>
+                  <AdminLogos />
+                </Suspense>
+              } 
+            />
+          </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
