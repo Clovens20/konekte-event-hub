@@ -18,14 +18,14 @@ import { cn } from '@/lib/utils';
 
 const navItems = [
   { to: '/admin', icon: LayoutDashboard, label: 'Dashboard', end: true },
-  { to: '/admin/seminar', icon: Calendar, label: 'Séminaire' },
-  { to: '/admin/program', icon: BookOpen, label: 'Programme' },
-  { to: '/admin/benefits', icon: Star, label: 'Avantages' },
-  { to: '/admin/promo-codes', icon: Ticket, label: 'Codes Promo' },
-  { to: '/admin/inscriptions', icon: Users, label: 'Inscriptions' },
-  { to: '/admin/footer', icon: Settings, label: 'Footer' },
-  { to: '/admin/files', icon: FileCode, label: 'Fichiers' },
-  { to: '/admin/logos', icon: Image, label: 'Logos' },
+  { to: '/admin/seminar', icon: Calendar, label: 'Séminaire', end: false },
+  { to: '/admin/program', icon: BookOpen, label: 'Programme', end: false },
+  { to: '/admin/benefits', icon: Star, label: 'Avantages', end: false },
+  { to: '/admin/promo-codes', icon: Ticket, label: 'Codes Promo', end: false },
+  { to: '/admin/inscriptions', icon: Users, label: 'Inscriptions', end: false },
+  { to: '/admin/footer', icon: Settings, label: 'Footer', end: false },
+  { to: '/admin/files', icon: FileCode, label: 'Fichiers', end: false },
+  { to: '/admin/logos', icon: Image, label: 'Logos', end: false },
 ];
 
 export const AdminSidebar = () => {
@@ -62,7 +62,7 @@ export const AdminSidebar = () => {
                 end={item.end}
                 className={({ isActive }) =>
                   cn(
-                    'flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors',
+                    'flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-medium transition-colors cursor-pointer',
                     isActive
                       ? 'bg-primary text-primary-foreground'
                       : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'
@@ -70,7 +70,7 @@ export const AdminSidebar = () => {
                 }
               >
                 <item.icon className="h-5 w-5" />
-                {item.label}
+                <span>{item.label}</span>
               </NavLink>
             </li>
           ))}
