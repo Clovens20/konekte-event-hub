@@ -221,16 +221,16 @@ export const InscriptionModal = ({ isOpen, onClose }: InscriptionModalProps) => 
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-foreground/50 backdrop-blur-sm animate-fade-in">
-      <div className="bg-card rounded-3xl w-full max-w-xl max-h-[90vh] overflow-y-auto shadow-2xl animate-scale-in">
-        <div className="sticky top-0 bg-card border-b border-border p-6 flex items-center justify-between rounded-t-3xl">
-          <h2 className="text-2xl font-bold">Réserver ma place</h2>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-foreground/50 backdrop-blur-sm animate-fade-in">
+      <div className="bg-card rounded-2xl sm:rounded-3xl w-full max-w-xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto shadow-2xl animate-scale-in">
+        <div className="sticky top-0 bg-card border-b border-border p-4 sm:p-6 flex items-center justify-between rounded-t-2xl sm:rounded-t-3xl z-10">
+          <h2 className="text-xl sm:text-2xl font-bold">Réserver ma place</h2>
           <button onClick={onClose} className="p-2 hover:bg-muted rounded-xl transition-colors" aria-label="Fermer">
             <X className="w-5 h-5" />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-6 space-y-5">
+        <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4 sm:space-y-5">
           <div>
             <label className="block text-sm font-medium mb-2">Nom complet *</label>
             <input 
@@ -296,7 +296,7 @@ export const InscriptionModal = ({ isOpen, onClose }: InscriptionModalProps) => 
 
           <div>
             <label className="block text-sm font-medium mb-2">Option de paiement *</label>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-3 gap-2 sm:gap-3">
               {(['25', '50', '100'] as const).map((pct) => (
                 <button 
                   type="button" 
@@ -306,10 +306,10 @@ export const InscriptionModal = ({ isOpen, onClose }: InscriptionModalProps) => 
                     setFormData({ ...formData, pourcentagePaye: pct, codePromo: '' }); 
                     setPromoApplied(null); 
                   }}
-                  className={`p-4 rounded-xl border-2 transition-all ${formData.pourcentagePaye === pct ? 'border-primary bg-primary/10' : 'border-border hover:border-primary/50'}`}
+                  className={`p-3 sm:p-4 rounded-lg sm:rounded-xl border-2 transition-all ${formData.pourcentagePaye === pct ? 'border-primary bg-primary/10' : 'border-border hover:border-primary/50'}`}
                 >
-                  <div className="text-lg font-bold">{pct}%</div>
-                  <div className="text-xs text-muted-foreground">{new Intl.NumberFormat('fr-HT').format(prixBase * parseInt(pct) / 100)} HTG</div>
+                  <div className="text-base sm:text-lg font-bold">{pct}%</div>
+                  <div className="text-[10px] sm:text-xs text-muted-foreground break-words">{new Intl.NumberFormat('fr-HT').format(prixBase * parseInt(pct) / 100)} HTG</div>
                 </button>
               ))}
             </div>

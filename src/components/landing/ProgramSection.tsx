@@ -26,39 +26,39 @@ export const ProgramSection = () => {
       {/* Background decoration */}
       <div className="absolute top-0 right-0 w-[300px] h-[300px] bg-gradient-to-br from-primary/10 to-secondary/10 rounded-full blur-3xl" />
       
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 relative z-10">
         {/* Section Header */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-secondary/10 rounded-full text-secondary text-sm font-medium mb-4">
-            <BookOpen className="w-4 h-4" />
+        <div className="text-center mb-12 sm:mb-16">
+          <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-secondary/10 rounded-full text-secondary text-xs sm:text-sm font-medium mb-3 sm:mb-4">
+            <BookOpen className="w-3 h-3 sm:w-4 sm:h-4" />
             Programme complet
           </div>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 px-2">
             Programme du <span className="text-gradient">Séminaire</span>
           </h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+          <p className="text-muted-foreground text-base sm:text-lg max-w-2xl mx-auto px-2">
             Trois jours intensifs pour maîtriser les outils d'IA qui transforment le développement web
           </p>
         </div>
 
         {/* Program Cards - CORRECTION: Ajout de animate-fade-in */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
           {modules.map((module, index) => (
             <div 
               key={module.id} 
-              className="card-elevated p-6 md:p-8 group hover:scale-[1.02] transition-all duration-300 animate-fade-in"
+              className="card-elevated p-5 sm:p-6 md:p-8 group hover:scale-[1.02] transition-all duration-300 animate-fade-in"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               {/* Day Badge */}
-              <div className="inline-flex items-center justify-center w-14 h-14 bg-gradient-primary rounded-2xl text-primary-foreground font-bold text-xl mb-6 group-hover:scale-110 transition-transform">
+              <div className="inline-flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 bg-gradient-primary rounded-xl sm:rounded-2xl text-primary-foreground font-bold text-lg sm:text-xl mb-4 sm:mb-6 group-hover:scale-110 transition-transform">
                 J{module.jour}
               </div>
 
               {/* Content */}
-              <h3 className="text-xl font-bold mb-3 group-hover:text-primary transition-colors">
+              <h3 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3 group-hover:text-primary transition-colors">
                 {module.titre}
               </h3>
-              <p className="text-muted-foreground leading-relaxed mb-6">
+              <p className="text-sm sm:text-base text-muted-foreground leading-relaxed mb-4 sm:mb-6">
                 {module.description}
               </p>
 

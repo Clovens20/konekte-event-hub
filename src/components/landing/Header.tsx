@@ -1,10 +1,47 @@
 import { useState } from 'react';
-import { Menu, X, Sparkles } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { useSeminarInfo, useInscriptionCount } from '@/hooks/useSeminarData';
 
 interface HeaderProps {
   onOpenModal: () => void;
 }
+
+// Composant pour afficher le logo GGTC avec fallback
+const GGTCLogo = () => {
+  const [hasError, setHasError] = useState(false);
+  const [currentSrc, setCurrentSrc] = useState(0);
+  
+  // Essayer plusieurs formats et extensions (commencer par .jpg car c'est le format actuel)
+  const extensions = ['.jpg', '.jpeg', '.png', '.svg', '.webp'];
+  const sources = extensions.map(ext => `/logos/ggtc-logo${ext}`);
+
+  const handleError = () => {
+    if (currentSrc < sources.length - 1) {
+      setCurrentSrc(currentSrc + 1);
+    } else {
+      setHasError(true);
+    }
+  };
+
+  if (hasError) {
+    // Fallback : icône simple si le logo n'est pas trouvé
+    return (
+      <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gradient-primary rounded-lg sm:rounded-xl flex items-center justify-center">
+        <span className="text-primary-foreground font-bold text-xs sm:text-sm">GG</span>
+      </div>
+    );
+  }
+
+  return (
+    <img 
+      src={sources[currentSrc]} 
+      alt="GGTC" 
+      className="w-8 h-8 sm:w-10 sm:h-10 object-contain"
+      onError={handleError}
+      loading="eager"
+    />
+  );
+};
 
 export const Header = ({ onOpenModal }: HeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -17,12 +54,10 @@ export const Header = ({ onOpenModal }: HeaderProps) => {
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/50">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16 md:h-20">
-          {/* Logo */}
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-gradient-primary rounded-xl flex items-center justify-center">
-              <Sparkles className="w-5 h-5 text-primary-foreground" />
-            </div>
-            <span className="text-xl font-bold">Konekte Group</span>
+          {/* Logo GGTC */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            <GGTCLogo />
+            <span className="text-lg sm:text-xl font-bold">GGTC</span>
           </div>
 
           {/* Desktop Navigation */}

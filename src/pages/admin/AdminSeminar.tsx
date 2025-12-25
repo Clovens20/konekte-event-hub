@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { Button } from '@/components/ui/button';
@@ -10,6 +10,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from '@/hooks/use-toast';
 import { Loader2, Save } from 'lucide-react';
 import { format } from 'date-fns';
+import { logError, showError } from '@/lib/error-handler';
 
 const AdminSeminar = () => {
   const queryClient = useQueryClient();
@@ -21,9 +22,13 @@ const AdminSeminar = () => {
         .from('seminar_info')
         .select('*')
         .single();
-      if (error) throw error;
+      if (error) {
+        logError(error, 'AdminSeminar');
+        throw error;
+      }
       return data;
     },
+    staleTime: 5 * 60 * 1000, // Cache 5 minutes
   });
 
   const [formData, setFormData] = useState({
@@ -35,10 +40,15 @@ const AdminSeminar = () => {
     prix_base: 0,
     nombre_places_total: 0,
     organisateur: '',
+    pricing_badge_text: '',
+    pricing_title: '',
+    pricing_subtitle: '',
+    pricing_features: [] as string[],
+    pricing_promo_notice: '',
   });
 
   // Update form when data loads
-  useState(() => {
+  useEffect(() => {
     if (seminar) {
       setFormData({
         titre: seminar.titre,
@@ -49,16 +59,40 @@ const AdminSeminar = () => {
         prix_base: seminar.prix_base,
         nombre_places_total: seminar.nombre_places_total,
         organisateur: seminar.organisateur,
+        pricing_badge_text: (seminar as any).pricing_badge_text || 'Tarif spécial lancement',
+        pricing_title: (seminar as any).pricing_title || 'Investissez dans votre avenir',
+        pricing_subtitle: (seminar as any).pricing_subtitle || 'Un investissement unique pour des compétences qui vous accompagneront toute votre carrière',
+        pricing_features: ((seminar as any).pricing_features as string[]) || [
+          '3 jours de formation intensive',
+          'Certificat officiel Konekte Group',
+          'Matériel pédagogique complet',
+          'Accès à la communauté exclusive',
+          '3 mois de support post-formation',
+          'Projets pratiques guidés',
+        ],
+        pricing_promo_notice: (seminar as any).pricing_promo_notice || 'Codes promo disponibles lors de l\'inscription',
       });
     }
-  });
+  }, [seminar]);
 
   const updateMutation = useMutation({
     mutationFn: async (data: typeof formData) => {
       const { error } = await supabase
         .from('seminar_info')
         .update({
-          ...data,
+          titre: data.titre,
+          description: data.description,
+          lieu: data.lieu,
+          date_debut: data.date_debut,
+          date_fin: data.date_fin,
+          prix_base: data.prix_base,
+          nombre_places_total: data.nombre_places_total,
+          organisateur: data.organisateur,
+          pricing_badge_text: data.pricing_badge_text,
+          pricing_title: data.pricing_title,
+          pricing_subtitle: data.pricing_subtitle,
+          pricing_features: data.pricing_features,
+          pricing_promo_notice: data.pricing_promo_notice,
           updated_at: new Date().toISOString(),
         })
         .eq('id', seminar?.id);
@@ -72,11 +106,8 @@ const AdminSeminar = () => {
       });
     },
     onError: (error) => {
-      toast({
-        title: 'Erreur',
-        description: error.message,
-        variant: 'destructive',
-      });
+      logError(error, 'UpdateSeminar');
+      showError(error, 'Erreur lors de la mise à jour');
     },
   });
 
@@ -97,19 +128,6 @@ const AdminSeminar = () => {
     );
   }
 
-  // Initialize form data if seminar loaded
-  if (seminar && !formData.titre) {
-    setFormData({
-      titre: seminar.titre,
-      description: seminar.description,
-      lieu: seminar.lieu,
-      date_debut: seminar.date_debut,
-      date_fin: seminar.date_fin,
-      prix_base: seminar.prix_base,
-      nombre_places_total: seminar.nombre_places_total,
-      organisateur: seminar.organisateur,
-    });
-  }
 
   return (
     <div className="space-y-6">
@@ -215,6 +233,140 @@ const AdminSeminar = () => {
                   onChange={(e) => setFormData({ ...formData, nombre_places_total: Number(e.target.value) })}
                   required
                 />
+              </div>
+            </div>
+
+            {/* Section Tarification */}
+            <div className="border-t pt-6 mt-6">
+              <h3 className="text-lg font-semibold mb-4">Section Tarification</h3>
+              
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="pricing_badge_text">Badge (ex: "Tarif spécial lancement")</Label>
+                  <Input
+                    id="pricing_badge_text"
+                    value={formData.pricing_badge_text}
+                    onChange={(e) => setFormData({ ...formData, pricing_badge_text: e.target.value })}
+                    placeholder="Tarif spécial lancement"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="pricing_title">Titre principal</Label>
+                  <Input
+                    id="pricing_title"
+                    value={formData.pricing_title}
+                    onChange={(e) => setFormData({ ...formData, pricing_title: e.target.value })}
+                    placeholder="Investissez dans votre avenir"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Le dernier mot sera automatiquement mis en évidence
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="pricing_subtitle">Sous-titre</Label>
+                  <Textarea
+                    id="pricing_subtitle"
+                    value={formData.pricing_subtitle}
+                    onChange={(e) => setFormData({ ...formData, pricing_subtitle: e.target.value })}
+                    rows={2}
+                    placeholder="Un investissement unique pour des compétences qui vous accompagneront toute votre carrière"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Avantages inclus (une par ligne)</Label>
+                  <Textarea
+                    value={formData.pricing_features.join('\n')}
+                    onChange={(e) => {
+                      const features = e.target.value.split('\n').filter(f => f.trim() !== '');
+                      setFormData({ ...formData, pricing_features: features });
+                    }}
+                    rows={6}
+                    placeholder="3 jours de formation intensive&#10;Certificat officiel Konekte Group&#10;Matériel pédagogique complet"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Séparez chaque avantage par une nouvelle ligne
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="pricing_promo_notice">Notice codes promo</Label>
+                  <Input
+                    id="pricing_promo_notice"
+                    value={formData.pricing_promo_notice}
+                    onChange={(e) => setFormData({ ...formData, pricing_promo_notice: e.target.value })}
+                    placeholder="Codes promo disponibles lors de l'inscription"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Section Tarification */}
+            <div className="border-t pt-6 mt-6">
+              <h3 className="text-lg font-semibold mb-4">Section Tarification</h3>
+              
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="pricing_badge_text">Badge (ex: "Tarif spécial lancement")</Label>
+                  <Input
+                    id="pricing_badge_text"
+                    value={formData.pricing_badge_text}
+                    onChange={(e) => setFormData({ ...formData, pricing_badge_text: e.target.value })}
+                    placeholder="Tarif spécial lancement"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="pricing_title">Titre principal</Label>
+                  <Input
+                    id="pricing_title"
+                    value={formData.pricing_title}
+                    onChange={(e) => setFormData({ ...formData, pricing_title: e.target.value })}
+                    placeholder="Investissez dans votre avenir"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Le dernier mot sera automatiquement mis en évidence
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="pricing_subtitle">Sous-titre</Label>
+                  <Textarea
+                    id="pricing_subtitle"
+                    value={formData.pricing_subtitle}
+                    onChange={(e) => setFormData({ ...formData, pricing_subtitle: e.target.value })}
+                    rows={2}
+                    placeholder="Un investissement unique pour des compétences qui vous accompagneront toute votre carrière"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <Label>Avantages inclus (une par ligne)</Label>
+                  <Textarea
+                    value={formData.pricing_features.join('\n')}
+                    onChange={(e) => {
+                      const features = e.target.value.split('\n').filter(f => f.trim() !== '');
+                      setFormData({ ...formData, pricing_features: features });
+                    }}
+                    rows={6}
+                    placeholder="3 jours de formation intensive&#10;Certificat officiel Konekte Group&#10;Matériel pédagogique complet"
+                  />
+                  <p className="text-xs text-muted-foreground">
+                    Séparez chaque avantage par une nouvelle ligne
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="pricing_promo_notice">Notice codes promo</Label>
+                  <Input
+                    id="pricing_promo_notice"
+                    value={formData.pricing_promo_notice}
+                    onChange={(e) => setFormData({ ...formData, pricing_promo_notice: e.target.value })}
+                    placeholder="Codes promo disponibles lors de l'inscription"
+                  />
+                </div>
               </div>
             </div>
 

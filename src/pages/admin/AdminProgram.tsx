@@ -39,9 +39,13 @@ const AdminProgram = () => {
         .select('*')
         .order('jour', { ascending: true })
         .order('ordre', { ascending: true });
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching modules:', error);
+        throw error;
+      }
       return data as ProgramModule[];
     },
+    staleTime: 5 * 60 * 1000, // Cache 5 minutes
   });
 
   const createMutation = useMutation({

@@ -41,34 +41,34 @@ export const HeroSection = ({ onOpenModal }: HeroSectionProps) => {
         </div>
       </div>
 
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 relative z-10">
         <div className="max-w-4xl mx-auto text-center">
           {/* Badge */}
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-full text-primary text-sm font-medium mb-8 animate-fade-in">
-            <Zap className="w-4 h-4" />
-            Séminaire Intensif 3 Jours
+          <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-primary/10 rounded-full text-primary text-xs sm:text-sm font-medium mb-6 sm:mb-8 animate-fade-in">
+            <Zap className="w-3 h-3 sm:w-4 sm:h-4" />
+            <span className="whitespace-nowrap">Séminaire Intensif 3 Jours</span>
           </div>
 
           {/* Main Title - CORRECTION DU DOUBLON */}
-          <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight mb-6 animate-fade-in" style={{ animationDelay: '0.1s' }}>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight mb-4 sm:mb-6 px-2 animate-fade-in" style={{ animationDelay: '0.1s' }}>
             Maîtriser l'IA pour le
             <span className="block text-gradient">Développement Web</span>
           </h1>
 
           {/* Description */}
-          <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-8 animate-fade-in" style={{ animationDelay: '0.2s' }}>
+          <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-6 sm:mb-8 px-2 animate-fade-in" style={{ animationDelay: '0.2s' }}>
             {seminarInfo?.description || 'Formez-vous aux outils d\'IA essentiels pour développer des applications web, sites vitrines, programmes SaaS et plateformes e-commerce.'}
           </p>
 
           {/* Location and Date */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 mb-10 animate-fade-in" style={{ animationDelay: '0.3s' }}>
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <MapPin className="w-5 h-5 text-primary" />
-              <span>{seminarInfo?.lieu || 'Saint-Marc, Haïti'}</span>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 md:gap-8 mb-8 sm:mb-10 px-2 animate-fade-in" style={{ animationDelay: '0.3s' }}>
+            <div className="flex items-center gap-2 text-sm sm:text-base text-muted-foreground">
+              <MapPin className="w-4 h-4 sm:w-5 sm:h-5 text-primary flex-shrink-0" />
+              <span className="whitespace-nowrap">{seminarInfo?.lieu || 'Saint-Marc, Haïti'}</span>
             </div>
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <Calendar className="w-5 h-5 text-secondary" />
-              <span>
+            <div className="flex items-center gap-2 text-sm sm:text-base text-muted-foreground">
+              <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-secondary flex-shrink-0" />
+              <span className="text-center sm:text-left">
                 {seminarInfo?.date_debut && seminarInfo?.date_fin 
                   ? `${formatDate(seminarInfo.date_debut)} - ${formatDate(seminarInfo.date_fin)}`
                   : '14 - 16 Mars 2025'
@@ -78,33 +78,34 @@ export const HeroSection = ({ onOpenModal }: HeroSectionProps) => {
           </div>
 
           {/* CTA Buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in" style={{ animationDelay: '0.4s' }}>
-            <button onClick={onOpenModal} className="btn-primary group text-lg">
-              Réserver ma place maintenant
-              <ArrowRight className="inline-block ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 px-2 animate-fade-in" style={{ animationDelay: '0.4s' }}>
+            <button onClick={onOpenModal} className="btn-primary group text-base sm:text-lg w-full sm:w-auto">
+              <span className="hidden sm:inline">Réserver ma place maintenant</span>
+              <span className="sm:hidden">Réserver ma place</span>
+              <ArrowRight className="inline-block ml-2 w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
             </button>
-            <a href="#programme" className="btn-secondary">
+            <a href="#programme" className="btn-secondary w-full sm:w-auto text-center">
               Voir le programme
             </a>
           </div>
 
           {/* Stats */}
-          <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6 animate-fade-in" style={{ animationDelay: '0.5s' }}>
+          <div className="mt-12 sm:mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-6 px-2 animate-fade-in" style={{ animationDelay: '0.5s' }}>
             <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-gradient">{placesRestantes}</div>
-              <div className="text-sm text-muted-foreground mt-1">Places restantes</div>
+              <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-gradient">{placesRestantes}</div>
+              <div className="text-xs sm:text-sm text-muted-foreground mt-1">Places restantes</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-gradient">3</div>
-              <div className="text-sm text-muted-foreground mt-1">Jours intensifs</div>
+              <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-gradient">3</div>
+              <div className="text-xs sm:text-sm text-muted-foreground mt-1">Jours intensifs</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-gradient">10+</div>
-              <div className="text-sm text-muted-foreground mt-1">Outils IA</div>
+              <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-gradient">10+</div>
+              <div className="text-xs sm:text-sm text-muted-foreground mt-1">Outils IA</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl md:text-4xl font-bold text-gradient">100%</div>
-              <div className="text-sm text-muted-foreground mt-1">Pratique</div>
+              <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-gradient">100%</div>
+              <div className="text-xs sm:text-sm text-muted-foreground mt-1">Pratique</div>
             </div>
           </div>
         </div>

@@ -42,7 +42,7 @@ export const createBazikPayment = async (
     // Appeler l'Edge Function Supabase qui gère l'API Bazik.io
     // Ajouter un timeout de 30 secondes
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 secondes
+    const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 secondes (optimisé pour 100+ utilisateurs simultanés)
     
     try {
       const response = await fetch(`${supabaseUrl}/functions/v1/create-bazik-payment`, {

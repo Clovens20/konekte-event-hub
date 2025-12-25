@@ -30,9 +30,13 @@ const AdminDashboard = () => {
         .from('inscriptions')
         .select('*')
         .order('created_at', { ascending: false });
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching inscriptions:', error);
+        throw error;
+      }
       return data;
     },
+    staleTime: 30 * 1000, // Cache 30 secondes pour le dashboard
   });
 
   const totalInscriptions = inscriptions?.filter(i => i.statut !== 'Annulé').length || 0;

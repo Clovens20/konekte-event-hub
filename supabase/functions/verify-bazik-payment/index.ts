@@ -5,7 +5,7 @@ const BAZIK_API_KEY = Deno.env.get('BAZIK_API_KEY') || '';
 const BAZIK_USER_ID = Deno.env.get('BAZIK_USER_ID') || '';
 const BAZIK_BASE_URL = Deno.env.get('BAZIK_BASE_URL') || 'https://api.bazik.io';
 const SUPABASE_URL = Deno.env.get('SUPABASE_URL') || '';
-const SERVICE_ROLE_KEY = Deno.env.get('SERVICE_ROLE_KEY') || '';
+const SUPABASE_SERVICE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') || Deno.env.get('SERVICE_ROLE_KEY') || '';
 
 // Headers CORS
 const corsHeaders = {
@@ -135,26 +135,58 @@ serve(async (req) => {
     console.log('Payment verification response:', paymentData);
 
     // Analyser le statut du paiement
-    // Selon la doc MonCash: message: "successful" indique un paiement réussi
+    // Vérifier plusieurs formats possibles de réponse Bazik.io
     const message = paymentData.payment?.message || paymentData.message || '';
-    const isCompleted = message.toLowerCase() === 'successful' || 
-                       paymentData.payment?.status === 'successful' ||
-                       paymentData.status === 'successful';
+    const status = paymentData.payment?.status || paymentData.status || '';
+    const state = paymentData.payment?.state || paymentData.state || '';
+    
+    // Détecter si le paiement est complété (plusieurs formats possibles)
+    const isCompleted = 
+      message.toLowerCase() === 'successful' || 
+      message.toLowerCase() === 'paid' ||
+      status === 'successful' ||
+      status === 'paid' ||
+      status === 'completed' ||
+      state === 'successful' ||
+      state === 'paid' ||
+      state === 'completed' ||
+      paymentData.paid === true ||
+      paymentData.success === true ||
+      paymentData.completed === true;
+    
+    console.log('Payment status check:', {
+      transaction_id,
+      message,
+      status,
+      state,
+      isCompleted,
+      paymentData: JSON.stringify(paymentData).substring(0, 500) // Limiter la taille du log
+    });
 
     // Si le paiement est confirmé, mettre à jour la base de données
-    if (isCompleted && SUPABASE_URL && SERVICE_ROLE_KEY) {
-      const supabase = createClient(SUPABASE_URL, SERVICE_ROLE_KEY);
+    if (isCompleted && SUPABASE_URL && SUPABASE_SERVICE_KEY) {
+      const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
       
-      const { error } = await supabase
+      console.log(`Updating inscription ${transaction_id} to Confirmed status`);
+      
+      const { data, error } = await supabase
         .from('inscriptions')
         .update({ statut: 'Confirmé' })
-        .eq('transaction_id', transaction_id);
+        .eq('transaction_id', transaction_id)
+        .select();
 
       if (error) {
         console.error('Error updating inscription:', error);
         // Ne pas échouer la vérification si la mise à jour échoue
       } else {
-        console.log('Inscription updated successfully');
+        console.log(`Inscription ${transaction_id} updated successfully to Confirmed. Updated rows:`, data?.length || 0);
+      }
+    } else {
+      if (!isCompleted) {
+        console.log(`Payment not completed yet for transaction ${transaction_id}. Status:`, paymentData);
+      }
+      if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
+        console.error('Missing SUPABASE_URL or SUPABASE_SERVICE_KEY for updating inscription');
       }
     }
 

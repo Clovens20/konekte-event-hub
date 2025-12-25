@@ -47,9 +47,13 @@ const AdminPromoCodes = () => {
         .from('promo_codes')
         .select('*')
         .order('created_at', { ascending: false });
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching promo codes:', error);
+        throw error;
+      }
       return data as PromoCode[];
     },
+    staleTime: 2 * 60 * 1000, // Cache 2 minutes (plus fréquemment mis à jour)
   });
 
   const createMutation = useMutation({

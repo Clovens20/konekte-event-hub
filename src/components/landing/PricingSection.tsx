@@ -16,7 +16,8 @@ export const PricingSection = ({ onOpenModal }: PricingSectionProps) => {
     return new Intl.NumberFormat('fr-HT').format(price);
   };
 
-  const features = [
+  // Récupérer les features depuis la base de données ou utiliser les valeurs par défaut
+  const features = (seminarInfo?.pricing_features as string[]) || [
     '3 jours de formation intensive',
     'Certificat officiel Konekte Group',
     'Matériel pédagogique complet',
@@ -25,62 +26,73 @@ export const PricingSection = ({ onOpenModal }: PricingSectionProps) => {
     'Projets pratiques guidés',
   ];
 
+  const pricingBadge = seminarInfo?.pricing_badge_text || 'Tarif spécial lancement';
+  const pricingTitle = seminarInfo?.pricing_title || 'Investissez dans votre avenir';
+  const pricingSubtitle = seminarInfo?.pricing_subtitle || 'Un investissement unique pour des compétences qui vous accompagneront toute votre carrière';
+  const pricingPromoNotice = seminarInfo?.pricing_promo_notice || 'Codes promo disponibles lors de l\'inscription';
+
   return (
     <section className="py-20 md:py-32 bg-gradient-dark relative overflow-hidden">
       {/* Decorative elements */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-gradient-to-b from-primary/20 to-transparent rounded-full blur-3xl" />
       
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 relative z-10">
         {/* Section Header */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-primary/20 rounded-full text-primary text-sm font-medium mb-4">
-            <Sparkles className="w-4 h-4" />
-            Tarif spécial lancement
+        <div className="text-center mb-12 sm:mb-16">
+          <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-primary/20 rounded-full text-primary text-xs sm:text-sm font-medium mb-3 sm:mb-4">
+            <Sparkles className="w-3 h-3 sm:w-4 sm:h-4" />
+            {pricingBadge}
           </div>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4 text-primary-foreground">
-            Investissez dans votre <span className="text-primary">avenir</span>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 text-primary-foreground px-2">
+            {pricingTitle.split(' ').map((word, i, arr) => 
+              i === arr.length - 1 ? (
+                <span key={i}><span className="text-primary">{word}</span></span>
+              ) : (
+                <span key={i}>{word} </span>
+              )
+            )}
           </h2>
-          <p className="text-primary-foreground/70 text-lg max-w-2xl mx-auto">
-            Un investissement unique pour des compétences qui vous accompagneront toute votre carrière
+          <p className="text-primary-foreground/70 text-base sm:text-lg max-w-2xl mx-auto px-2">
+            {pricingSubtitle}
           </p>
         </div>
 
         {/* Pricing Card */}
-        <div className="max-w-lg mx-auto">
-          <div className="bg-card rounded-3xl p-8 md:p-10 shadow-2xl border border-border/20 relative overflow-hidden">
+        <div className="max-w-lg mx-auto px-2">
+          <div className="bg-card rounded-2xl sm:rounded-3xl p-6 sm:p-8 md:p-10 shadow-2xl border border-border/20 relative overflow-hidden">
             {/* Glow effect */}
             <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-primary/30 to-secondary/30 rounded-full blur-3xl" />
             
             <div className="relative z-10">
               {/* Price */}
-              <div className="text-center mb-8">
-                <div className="text-sm text-muted-foreground mb-2">Prix du séminaire</div>
+              <div className="text-center mb-6 sm:mb-8">
+                <div className="text-xs sm:text-sm text-muted-foreground mb-2">Prix du séminaire</div>
                 <div className="flex items-end justify-center gap-1">
-                  <span className="text-5xl md:text-6xl font-bold text-gradient">
+                  <span className="text-4xl sm:text-5xl md:text-6xl font-bold text-gradient">
                     {formatPrice(prixBase)}
                   </span>
-                  <span className="text-xl text-muted-foreground mb-2">HTG</span>
+                  <span className="text-lg sm:text-xl text-muted-foreground mb-1 sm:mb-2">HTG</span>
                 </div>
               </div>
 
               {/* Payment Options */}
-              <div className="bg-muted/50 rounded-2xl p-4 mb-8">
-                <div className="text-sm font-medium text-center mb-3">Options de paiement flexibles</div>
-                <div className="grid grid-cols-3 gap-2">
-                  <div className="bg-card rounded-xl p-3 text-center border border-border">
-                    <div className="text-lg font-bold text-primary">25%</div>
-                    <div className="text-xs text-muted-foreground">{formatPrice(prixBase * 0.25)} HTG</div>
+              <div className="bg-muted/50 rounded-xl sm:rounded-2xl p-3 sm:p-4 mb-6 sm:mb-8">
+                <div className="text-xs sm:text-sm font-medium text-center mb-2 sm:mb-3">Options de paiement flexibles</div>
+                <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
+                  <div className="bg-card rounded-lg sm:rounded-xl p-2 sm:p-3 text-center border border-border">
+                    <div className="text-base sm:text-lg font-bold text-primary">25%</div>
+                    <div className="text-[10px] sm:text-xs text-muted-foreground break-words">{formatPrice(prixBase * 0.25)} HTG</div>
                   </div>
-                  <div className="bg-card rounded-xl p-3 text-center border-2 border-primary relative">
-                    <div className="absolute -top-2 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-xs px-2 py-0.5 rounded-full">
+                  <div className="bg-card rounded-lg sm:rounded-xl p-2 sm:p-3 text-center border-2 border-primary relative">
+                    <div className="absolute -top-1.5 sm:-top-2 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 rounded-full whitespace-nowrap">
                       Populaire
                     </div>
-                    <div className="text-lg font-bold text-primary">50%</div>
-                    <div className="text-xs text-muted-foreground">{formatPrice(prixBase * 0.5)} HTG</div>
+                    <div className="text-base sm:text-lg font-bold text-primary">50%</div>
+                    <div className="text-[10px] sm:text-xs text-muted-foreground break-words">{formatPrice(prixBase * 0.5)} HTG</div>
                   </div>
-                  <div className="bg-card rounded-xl p-3 text-center border border-border">
-                    <div className="text-lg font-bold text-primary">100%</div>
-                    <div className="text-xs text-muted-foreground">{formatPrice(prixBase)} HTG</div>
+                  <div className="bg-card rounded-lg sm:rounded-xl p-2 sm:p-3 text-center border border-border">
+                    <div className="text-base sm:text-lg font-bold text-primary">100%</div>
+                    <div className="text-[10px] sm:text-xs text-muted-foreground break-words">{formatPrice(prixBase)} HTG</div>
                   </div>
                 </div>
               </div>
@@ -100,7 +112,7 @@ export const PricingSection = ({ onOpenModal }: PricingSectionProps) => {
               {/* Promo Code Notice */}
               <div className="text-center text-sm text-muted-foreground mb-6">
                 <Sparkles className="w-4 h-4 inline-block mr-1" />
-                Codes promo disponibles lors de l'inscription
+                {pricingPromoNotice}
               </div>
 
               {/* CTA */}

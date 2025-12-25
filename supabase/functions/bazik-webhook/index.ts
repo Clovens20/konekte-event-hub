@@ -87,33 +87,62 @@ serve(async (req) => {
     // Déterminer le statut du paiement
     const paymentStatus = event.status || 
                          event.payment_status || 
-                         event.state;
+                         event.state ||
+                         event.payment?.status ||
+                         event.payment?.state;
     
     const isCompleted = paymentStatus === 'paid' || 
                        paymentStatus === 'success' || 
                        paymentStatus === 'completed' ||
                        paymentStatus === 'successful' ||
                        event.paid === true ||
-                       event.type === 'payment.completed';
+                       event.success === true ||
+                       event.completed === true ||
+                       event.payment?.paid === true ||
+                       event.payment?.success === true ||
+                       event.type === 'payment.completed' ||
+                       event.type === 'payment.success';
+    
+    console.log('Webhook payment status check:', {
+      transaction_id,
+      paymentStatus,
+      isCompleted,
+      event_type: event.type,
+      event_keys: Object.keys(event)
+    });
 
     // Mettre à jour l'inscription si le paiement est confirmé
     if (isCompleted && SUPABASE_URL && SUPABASE_SERVICE_KEY) {
       const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
       
-      const { error } = await supabase
+      console.log(`Webhook: Updating inscription ${transactionId} to Confirmed status`);
+      
+      const { data, error } = await supabase
         .from('inscriptions')
         .update({ statut: 'Confirmé' })
-        .eq('transaction_id', transactionId);
+        .eq('transaction_id', transactionId)
+        .select();
 
       if (error) {
-        console.error('Error updating inscription:', error);
+        console.error('Webhook: Error updating inscription:', error);
         return new Response(
-          JSON.stringify({ success: false, message: 'Failed to update inscription' }),
+          JSON.stringify({ success: false, message: 'Failed to update inscription', error: error.message }),
           { status: 500, headers: { 'Content-Type': 'application/json' } }
         );
       }
 
-      console.log(`Inscription ${transactionId} confirmed via webhook`);
+      if (data && data.length > 0) {
+        console.log(`Webhook: Inscription ${transactionId} confirmed successfully. Updated ${data.length} row(s)`);
+      } else {
+        console.warn(`Webhook: No inscription found with transaction_id ${transactionId}`);
+      }
+    } else {
+      if (!isCompleted) {
+        console.log(`Webhook: Payment not completed for transaction ${transactionId}. Status: ${paymentStatus}`);
+      }
+      if (!SUPABASE_URL || !SUPABASE_SERVICE_KEY) {
+        console.error('Webhook: Missing SUPABASE_URL or SUPABASE_SERVICE_KEY');
+      }
     }
 
     // Retourner une réponse de succès à Bazik.io

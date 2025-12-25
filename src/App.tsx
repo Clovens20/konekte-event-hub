@@ -14,6 +14,8 @@ import AdminBenefits from "./pages/admin/AdminBenefits";
 import AdminPromoCodes from "./pages/admin/AdminPromoCodes";
 import AdminInscriptions from "./pages/admin/AdminInscriptions";
 import AdminFooter from "./pages/admin/AdminFooter";
+import AdminFiles from "./pages/admin/AdminFiles";
+import AdminLogos from "./pages/admin/AdminLogos";
 import { AdminLayout } from "./components/admin/AdminLayout";
 import { ProtectedRoute } from "./components/admin/ProtectedRoute";
 
@@ -55,10 +57,12 @@ const App = () => (
             <Route path="seminar" element={<AdminSeminar />} />
             <Route path="program" element={<AdminProgram />} />
             <Route path="benefits" element={<AdminBenefits />} />
-            <Route path="promo-codes" element={<AdminPromoCodes />} />
-            <Route path="inscriptions" element={<AdminInscriptions />} />
-            <Route path="footer" element={<AdminFooter />} />
-          </Route>
+              <Route path="promo-codes" element={<AdminPromoCodes />} />
+              <Route path="inscriptions" element={<AdminInscriptions />} />
+              <Route path="footer" element={<AdminFooter />} />
+              <Route path="files" element={<AdminFiles />} />
+              <Route path="logos" element={<AdminLogos />} />
+            </Route>
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>

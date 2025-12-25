@@ -8,7 +8,9 @@ import {
   Users, 
   Settings,
   LogOut,
-  GraduationCap
+  GraduationCap,
+  FileCode,
+  Image
 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
@@ -22,6 +24,8 @@ const navItems = [
   { to: '/admin/promo-codes', icon: Ticket, label: 'Codes Promo' },
   { to: '/admin/inscriptions', icon: Users, label: 'Inscriptions' },
   { to: '/admin/footer', icon: Settings, label: 'Footer' },
+  { to: '/admin/files', icon: FileCode, label: 'Fichiers' },
+  { to: '/admin/logos', icon: Image, label: 'Logos' },
 ];
 
 export const AdminSidebar = () => {

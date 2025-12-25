@@ -1,0 +1,11 @@
+# Fichiers à ignorer lors du déploiement Vercel
+node_modules
+.git
+.env.local
+.env.development
+*.log
+supabase/functions
+supabase/migrations
+*.md
+!README.md
+
