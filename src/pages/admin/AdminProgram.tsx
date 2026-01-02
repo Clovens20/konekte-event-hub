@@ -1,16 +1,17 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { useSeminarInfo } from '@/hooks/useSeminarData';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Skeleton } from '@/components/ui/skeleton';
 import { toast } from '@/hooks/use-toast';
-import { Loader2, Plus, Pencil, Trash2 } from 'lucide-react';
+import { Loader2, Plus, Pencil, Trash2, Settings } from 'lucide-react';
 
 interface ProgramModule {
   id: string;
@@ -22,13 +23,20 @@ interface ProgramModule {
 
 const AdminProgram = () => {
   const queryClient = useQueryClient();
+  const { data: seminarInfo } = useSeminarInfo();
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isSectionDialogOpen, setIsSectionDialogOpen] = useState(false);
   const [editingModule, setEditingModule] = useState<ProgramModule | null>(null);
   const [formData, setFormData] = useState({
     jour: 1,
     titre: '',
     description: '',
     ordre: 0,
+  });
+  const [sectionFormData, setSectionFormData] = useState({
+    program_badge_text: '',
+    program_title: '',
+    program_subtitle: '',
   });
 
   const { data: modules, isLoading } = useQuery({
@@ -48,6 +56,17 @@ const AdminProgram = () => {
     staleTime: 5 * 60 * 1000, // Cache 5 minutes
   });
 
+  // Initialiser les données de la section quand seminarInfo est chargé
+  useEffect(() => {
+    if (seminarInfo) {
+      setSectionFormData({
+        program_badge_text: seminarInfo.program_badge_text || 'Programme complet',
+        program_title: seminarInfo.program_title || 'Programme du Séminaire',
+        program_subtitle: seminarInfo.program_subtitle || 'Trois jours intensifs pour maîtriser les outils d\'IA qui transforment le développement web',
+      });
+    }
+  }, [seminarInfo]);
+
   const createMutation = useMutation({
     mutationFn: async (data: Omit<ProgramModule, 'id'>) => {
       const { error } = await supabase.from('program_modules').insert(data);
@@ -55,6 +74,7 @@ const AdminProgram = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['program-modules'] });
+      queryClient.refetchQueries({ queryKey: ['program-modules'], type: 'active' });
       toast({ title: 'Succès', description: 'Module ajouté avec succès.' });
       resetForm();
     },
@@ -70,6 +90,7 @@ const AdminProgram = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['program-modules'] });
+      queryClient.refetchQueries({ queryKey: ['program-modules'], type: 'active' });
       toast({ title: 'Succès', description: 'Module mis à jour.' });
       resetForm();
     },
@@ -85,7 +106,34 @@ const AdminProgram = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['program-modules'] });
+      queryClient.refetchQueries({ queryKey: ['program-modules'], type: 'active' });
       toast({ title: 'Succès', description: 'Module supprimé.' });
+    },
+    onError: (error) => {
+      toast({ title: 'Erreur', description: error.message, variant: 'destructive' });
+    },
+  });
+
+  // Mutation pour mettre à jour la section Programme
+  const updateSectionMutation = useMutation({
+    mutationFn: async (data: typeof sectionFormData) => {
+      if (!seminarInfo?.id) throw new Error('Informations du séminaire non trouvées');
+      const { error } = await supabase
+        .from('seminar_info')
+        .update({
+          program_badge_text: data.program_badge_text,
+          program_title: data.program_title,
+          program_subtitle: data.program_subtitle,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', seminarInfo.id);
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['seminar-info'] });
+      queryClient.refetchQueries({ queryKey: ['seminar-info'], type: 'active' });
+      toast({ title: 'Succès', description: 'Section Programme mise à jour.' });
+      setIsSectionDialogOpen(false);
     },
     onError: (error) => {
       toast({ title: 'Erreur', description: error.message, variant: 'destructive' });
@@ -143,13 +191,68 @@ const AdminProgram = () => {
           <h1 className="text-3xl font-bold">Programme du Séminaire</h1>
           <p className="text-muted-foreground">Gérez les modules du programme</p>
         </div>
-        <Dialog open={isDialogOpen} onOpenChange={(open) => { setIsDialogOpen(open); if (!open) resetForm(); }}>
-          <DialogTrigger asChild>
-            <Button>
-              <Plus className="mr-2 h-4 w-4" />
-              Ajouter un module
-            </Button>
-          </DialogTrigger>
+        <div className="flex gap-2">
+          <Dialog open={isSectionDialogOpen} onOpenChange={setIsSectionDialogOpen}>
+            <DialogTrigger asChild>
+              <Button variant="outline">
+                <Settings className="mr-2 h-4 w-4" />
+                Modifier la section
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-2xl">
+              <DialogHeader>
+                <DialogTitle>Modifier la section Programme</DialogTitle>
+              </DialogHeader>
+              <form onSubmit={(e) => { e.preventDefault(); updateSectionMutation.mutate(sectionFormData); }} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="program_badge_text">Badge (texte du badge)</Label>
+                  <Input
+                    id="program_badge_text"
+                    value={sectionFormData.program_badge_text}
+                    onChange={(e) => setSectionFormData({ ...sectionFormData, program_badge_text: e.target.value })}
+                    placeholder="Programme complet"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="program_title">Titre principal</Label>
+                  <Input
+                    id="program_title"
+                    value={sectionFormData.program_title}
+                    onChange={(e) => setSectionFormData({ ...sectionFormData, program_title: e.target.value })}
+                    placeholder="Programme du Séminaire"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="program_subtitle">Sous-titre / Description</Label>
+                  <Textarea
+                    id="program_subtitle"
+                    value={sectionFormData.program_subtitle}
+                    onChange={(e) => setSectionFormData({ ...sectionFormData, program_subtitle: e.target.value })}
+                    rows={3}
+                    placeholder="Trois jours intensifs pour maîtriser les outils d'IA qui transforment le développement web"
+                  />
+                </div>
+                <div className="flex justify-end gap-2">
+                  <Button type="button" variant="outline" onClick={() => setIsSectionDialogOpen(false)}>
+                    Annuler
+                  </Button>
+                  <Button type="submit" disabled={updateSectionMutation.isPending}>
+                    {updateSectionMutation.isPending && (
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    )}
+                    Enregistrer
+                  </Button>
+                </div>
+              </form>
+            </DialogContent>
+          </Dialog>
+          <Dialog open={isDialogOpen} onOpenChange={(open) => { setIsDialogOpen(open); if (!open) resetForm(); }}>
+            <DialogTrigger asChild>
+              <Button>
+                <Plus className="mr-2 h-4 w-4" />
+                Ajouter un module
+              </Button>
+            </DialogTrigger>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>{editingModule ? 'Modifier le module' : 'Ajouter un module'}</DialogTitle>
@@ -210,6 +313,7 @@ const AdminProgram = () => {
             </form>
           </DialogContent>
         </Dialog>
+        </div>
       </div>
 
       <Card>

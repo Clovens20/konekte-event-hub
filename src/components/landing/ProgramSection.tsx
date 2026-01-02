@@ -1,8 +1,14 @@
-import { useProgramModules } from '@/hooks/useSeminarData';
+import { useProgramModules, useSeminarInfo } from '@/hooks/useSeminarData';
 import { BookOpen, CheckCircle } from 'lucide-react';
 
 export const ProgramSection = () => {
   const { data: modules = [], isLoading } = useProgramModules();
+  const { data: seminarInfo } = useSeminarInfo();
+
+  // Utiliser les valeurs de la base de données ou les valeurs par défaut
+  const badgeText = seminarInfo?.program_badge_text || 'Programme complet';
+  const title = seminarInfo?.program_title || 'Programme du Séminaire';
+  const subtitle = seminarInfo?.program_subtitle || 'Trois jours intensifs pour maîtriser les outils d\'IA qui transforment le développement web';
 
   if (isLoading) {
     return (
@@ -31,13 +37,19 @@ export const ProgramSection = () => {
         <div className="text-center mb-12 sm:mb-16">
           <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-secondary/10 rounded-full text-secondary text-xs sm:text-sm font-medium mb-3 sm:mb-4">
             <BookOpen className="w-3 h-3 sm:w-4 sm:h-4" />
-            Programme complet
+            {badgeText}
           </div>
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 px-2">
-            Programme du <span className="text-gradient">Séminaire</span>
+            {title.split(' ').map((word, i, arr) => 
+              i === arr.length - 1 ? (
+                <span key={i}><span className="text-gradient">{word}</span></span>
+              ) : (
+                <span key={i}>{word} </span>
+              )
+            )}
           </h2>
           <p className="text-muted-foreground text-base sm:text-lg max-w-2xl mx-auto px-2">
-            Trois jours intensifs pour maîtriser les outils d'IA qui transforment le développement web
+            {subtitle}
           </p>
         </div>
 

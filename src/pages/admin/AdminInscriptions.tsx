@@ -92,7 +92,7 @@ const AdminInscriptions = () => {
 
   const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
 
-  // Mutation pour changer le statut
+  // Mutation pour changer le statut avec optimistic update
   const updateStatusMutation = useMutation({
     mutationFn: async ({ id, status }: { id: string; status: InscriptionStatus }) => {
       const { error } = await supabase
@@ -105,13 +105,38 @@ const AdminInscriptions = () => {
         throw error;
       }
     },
+    onMutate: async ({ id, status }) => {
+      // Annuler les requêtes en cours pour éviter les conflits
+      await queryClient.cancelQueries({ queryKey: ['inscriptions-admin'] });
+      
+      // Snapshot de la valeur précédente pour la query actuelle
+      const queryKey = ['inscriptions-admin', page, statusFilter, levelFilter, debouncedSearch];
+      const previousData = queryClient.getQueryData(queryKey);
+      
+      // Optimistic update - mise à jour immédiate de l'UI
+      queryClient.setQueryData(queryKey, (old: any) => {
+        if (!old?.data) return old;
+        return {
+          ...old,
+          data: old.data.map((inscription: any) =>
+            inscription.id === id ? { ...inscription, statut: status } : inscription
+          ),
+        };
+      });
+      
+      return { previousData, queryKey };
+    },
+    onError: (error, variables, context) => {
+      // Rollback en cas d'erreur
+      if (context?.previousData && context?.queryKey) {
+        queryClient.setQueryData(context.queryKey, context.previousData);
+      }
+      showError(error, 'Erreur lors de la mise à jour');
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['inscriptions-admin'] });
       queryClient.invalidateQueries({ queryKey: ['inscription-count'] });
       toast({ title: 'Statut mis à jour', description: 'Le statut de l\'inscription a été modifié.' });
-    },
-    onError: (error) => {
-      showError(error, 'Erreur lors de la mise à jour');
     },
   });
 

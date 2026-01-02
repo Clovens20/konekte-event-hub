@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { useSeminarInfo } from '@/hooks/useSeminarData';
 import { StatsCard } from '@/components/admin/StatsCard';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
@@ -9,34 +10,26 @@ import { format } from 'date-fns';
 import { fr } from 'date-fns/locale';
 
 const AdminDashboard = () => {
-  // Fetch seminar info
-  const { data: seminarInfo } = useQuery({
-    queryKey: ['seminar-info'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('seminar_info')
-        .select('*')
-        .single();
-      if (error) throw error;
-      return data;
-    },
-  });
+  // Utiliser le hook partagé pour éviter la duplication de requête
+  const { data: seminarInfo } = useSeminarInfo();
 
-  // Fetch inscriptions stats
+  // Fetch inscriptions stats - Limiter à 100 inscriptions récentes pour le dashboard
   const { data: inscriptions, isLoading } = useQuery({
-    queryKey: ['inscriptions-admin'],
+    queryKey: ['inscriptions-dashboard'],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('inscriptions')
-        .select('*')
-        .order('created_at', { ascending: false });
+        .select('id, nom_complet, email, statut, montant_paye, created_at')
+        .order('created_at', { ascending: false })
+        .limit(100); // Limiter à 100 inscriptions pour améliorer les performances
       if (error) {
         console.error('Error fetching inscriptions:', error);
         throw error;
       }
       return data;
     },
-    staleTime: 30 * 1000, // Cache 30 secondes pour le dashboard
+    staleTime: 60 * 1000, // Cache 1 minute pour le dashboard
+    gcTime: 5 * 60 * 1000, // Garde en cache 5 minutes
   });
 
   const totalInscriptions = inscriptions?.filter(i => i.statut !== 'Annulé').length || 0;

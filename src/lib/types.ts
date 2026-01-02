@@ -8,6 +8,9 @@ export interface SeminarInfo {
   nombre_places_total: number;
   organisateur: string;
   prix_base: number;
+  program_badge_text?: string | null;
+  program_title?: string | null;
+  program_subtitle?: string | null;
   created_at: string;
   updated_at: string;
 }

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
+import { useSeminarInfo } from '@/hooks/useSeminarData';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -15,21 +16,8 @@ import { logError, showError } from '@/lib/error-handler';
 const AdminSeminar = () => {
   const queryClient = useQueryClient();
   
-  const { data: seminar, isLoading } = useQuery({
-    queryKey: ['seminar-info'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('seminar_info')
-        .select('*')
-        .single();
-      if (error) {
-        logError(error, 'AdminSeminar');
-        throw error;
-      }
-      return data;
-    },
-    staleTime: 5 * 60 * 1000, // Cache 5 minutes
-  });
+  // Utiliser le hook partagé pour éviter la duplication de requête
+  const { data: seminar, isLoading } = useSeminarInfo();
 
   const [formData, setFormData] = useState({
     titre: '',
@@ -99,7 +87,10 @@ const AdminSeminar = () => {
       if (error) throw error;
     },
     onSuccess: () => {
+      // Invalider et forcer le refetch immédiat de toutes les queries liées
       queryClient.invalidateQueries({ queryKey: ['seminar-info'] });
+      // Forcer le refetch immédiat des queries actives
+      queryClient.refetchQueries({ queryKey: ['seminar-info'], type: 'active' });
       toast({
         title: 'Succès',
         description: 'Les informations du séminaire ont été mises à jour.',

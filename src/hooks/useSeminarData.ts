@@ -18,6 +18,11 @@ export const useSeminarInfo = () => {
       }
       return data;
     },
+    // Cache court pour que les modifications soient visibles rapidement
+    // mais pas trop court pour éviter trop de requêtes
+    staleTime: 30 * 1000, // 30 secondes - les données sont considérées comme fraîches pendant 30s
+    // Refetch si les données sont stale (plus de 30s) lors du montage
+    refetchOnMount: true, // Refetch si les données sont stale
   });
 };
 

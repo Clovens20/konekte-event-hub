@@ -63,6 +63,7 @@ const AdminPromoCodes = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['promo-codes'] });
+      queryClient.refetchQueries({ queryKey: ['promo-codes'], type: 'active' });
       toast({ title: 'Succès', description: 'Code promo créé avec succès.' });
       resetForm();
     },
@@ -78,6 +79,7 @@ const AdminPromoCodes = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['promo-codes'] });
+      queryClient.refetchQueries({ queryKey: ['promo-codes'], type: 'active' });
       toast({ title: 'Succès', description: 'Code promo mis à jour.' });
       resetForm();
     },
@@ -93,6 +95,7 @@ const AdminPromoCodes = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['promo-codes'] });
+      queryClient.refetchQueries({ queryKey: ['promo-codes'], type: 'active' });
       toast({ title: 'Succès', description: 'Code promo supprimé.' });
     },
     onError: (error) => {
@@ -107,6 +110,7 @@ const AdminPromoCodes = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['promo-codes'] });
+      queryClient.refetchQueries({ queryKey: ['promo-codes'], type: 'active' });
     },
     onError: (error) => {
       toast({ title: 'Erreur', description: error.message, variant: 'destructive' });

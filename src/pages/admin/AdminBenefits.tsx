@@ -71,6 +71,7 @@ const AdminBenefits = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['benefits'] });
+      queryClient.refetchQueries({ queryKey: ['benefits'], type: 'active' });
       toast({ title: 'Succès', description: 'Avantage ajouté avec succès.' });
       resetForm();
     },
@@ -86,6 +87,7 @@ const AdminBenefits = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['benefits'] });
+      queryClient.refetchQueries({ queryKey: ['benefits'], type: 'active' });
       toast({ title: 'Succès', description: 'Avantage mis à jour.' });
       resetForm();
     },
@@ -101,6 +103,7 @@ const AdminBenefits = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['benefits'] });
+      queryClient.refetchQueries({ queryKey: ['benefits'], type: 'active' });
       toast({ title: 'Succès', description: 'Avantage supprimé.' });
     },
     onError: (error) => {
