@@ -84,31 +84,57 @@ serve(async (req) => {
       );
     }
 
-    // Déterminer le statut du paiement
+    // Déterminer le statut du paiement avec vérification STRICTE
+    // Un webhook ne doit confirmer un paiement que s'il y a des preuves tangibles
     const paymentStatus = event.status || 
                          event.payment_status || 
                          event.state ||
                          event.payment?.status ||
                          event.payment?.state;
     
-    const isCompleted = paymentStatus === 'paid' || 
-                       paymentStatus === 'success' || 
-                       paymentStatus === 'completed' ||
-                       paymentStatus === 'successful' ||
-                       event.paid === true ||
-                       event.success === true ||
-                       event.completed === true ||
-                       event.payment?.paid === true ||
-                       event.payment?.success === true ||
-                       event.type === 'payment.completed' ||
-                       event.type === 'payment.success';
+    const payment = event.payment || event;
     
-    console.log('Webhook payment status check:', {
+    // Vérifier la présence d'indicateurs de paiement réellement complété
+    // Un paiement complété doit avoir au moins un code de transaction ou une référence
+    const hasTransactionCode = !!(payment.transactionCode || 
+                                 payment.transaction_code || 
+                                 payment.reference || 
+                                 payment.bankReference ||
+                                 payment.paymentReference ||
+                                 payment.moncash_transaction_id ||
+                                 event.transactionCode ||
+                                 event.reference);
+    
+    const statusText = (paymentStatus || '').toLowerCase();
+    
+    // Vérification STRICTE : le statut doit être explicitement "paid", "success", "completed"
+    // ET il doit y avoir une preuve de transaction (code, référence, etc.)
+    const isStatusCompleted = statusText === 'paid' || 
+                             statusText === 'success' || 
+                             statusText === 'completed' ||
+                             statusText === 'successful';
+    
+    // Un paiement est complété SEULEMENT si :
+    // - Le statut indique un paiement complété
+    // - ET il y a un code de transaction (preuve que le paiement a été effectué)
+    // - OU si l'événement est explicitement de type payment.completed/payment.success
+    //   avec une preuve de transaction
+    const isCompleted = (isStatusCompleted && hasTransactionCode) ||
+                       (event.type === 'payment.completed' && hasTransactionCode) ||
+                       (event.type === 'payment.success' && hasTransactionCode) ||
+                       (payment.paid === true && hasTransactionCode) ||
+                       (payment.success === true && hasTransactionCode) ||
+                       (payment.completed === true && hasTransactionCode);
+    
+    console.log('Webhook payment status check (STRICT):', {
       transaction_id,
       paymentStatus,
+      hasTransactionCode,
+      isStatusCompleted,
       isCompleted,
       event_type: event.type,
-      event_keys: Object.keys(event)
+      event_keys: Object.keys(event),
+      payment_keys: payment ? Object.keys(payment) : []
     });
 
     // Mettre à jour l'inscription si le paiement est confirmé

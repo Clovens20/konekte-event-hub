@@ -132,35 +132,63 @@ serve(async (req) => {
     }
 
     const paymentData = await verifyResponse.json();
-    console.log('Payment verification response:', paymentData);
+    console.log('Payment verification response:', JSON.stringify(paymentData));
 
-    // Analyser le statut du paiement
-    // Vérifier plusieurs formats possibles de réponse Bazik.io
-    const message = paymentData.payment?.message || paymentData.message || '';
-    const status = paymentData.payment?.status || paymentData.status || '';
-    const state = paymentData.payment?.state || paymentData.state || '';
+    // Analyser le statut du paiement avec une vérification STRICTE
+    // Ne confirmer que si le paiement est RÉELLEMENT complété avec des preuves tangibles
+    const payment = paymentData.payment || paymentData;
+    const message = payment.message || paymentData.message || '';
+    const status = payment.status || paymentData.status || '';
+    const state = payment.state || paymentData.state || '';
     
-    // Détecter si le paiement est complété (plusieurs formats possibles)
-    const isCompleted = 
-      message.toLowerCase() === 'successful' || 
-      message.toLowerCase() === 'paid' ||
-      status === 'successful' ||
-      status === 'paid' ||
-      status === 'completed' ||
-      state === 'successful' ||
-      state === 'paid' ||
-      state === 'completed' ||
-      paymentData.paid === true ||
-      paymentData.success === true ||
-      paymentData.completed === true;
+    // Vérifier la présence d'indicateurs de paiement réellement complété
+    // Un paiement complété doit avoir au moins :
+    // 1. Un statut explicite de succès
+    // 2. ET une preuve de transaction (code transaction, référence bancaire, etc.)
+    // 3. ET un montant confirmé (si disponible)
+    const hasTransactionCode = !!(payment.transactionCode || 
+                                 payment.transaction_code || 
+                                 payment.reference || 
+                                 payment.bankReference ||
+                                 payment.paymentReference ||
+                                 payment.moncash_transaction_id);
     
-    console.log('Payment status check:', {
+    const hasConfirmedAmount = !!(payment.amount || payment.amountPaid || payment.paidAmount);
+    
+    const statusText = (message || status || state || '').toLowerCase();
+    
+    // Vérification STRICTE : le statut doit être explicitement "successful", "paid", "completed"
+    // ET il doit y avoir une preuve de transaction (code, référence, etc.)
+    const isStatusCompleted = statusText === 'successful' || 
+                             statusText === 'paid' ||
+                             statusText === 'completed' ||
+                             status === 'successful' ||
+                             status === 'paid' ||
+                             status === 'completed' ||
+                             state === 'successful' ||
+                             state === 'paid' ||
+                             state === 'completed';
+    
+    // Un paiement est complété SEULEMENT si :
+    // - Le statut indique un paiement complété
+    // - ET il y a un code de transaction (preuve que le paiement a été effectué)
+    // - OU si l'API retourne explicitement paid/success/completed = true
+    const isCompleted = (isStatusCompleted && hasTransactionCode) ||
+                       (payment.paid === true && hasTransactionCode) ||
+                       (payment.success === true && hasTransactionCode) ||
+                       (payment.completed === true && hasTransactionCode);
+    
+    console.log('Payment status check (STRICT):', {
       transaction_id,
       message,
       status,
       state,
+      hasTransactionCode,
+      hasConfirmedAmount,
+      isStatusCompleted,
       isCompleted,
-      paymentData: JSON.stringify(paymentData).substring(0, 500) // Limiter la taille du log
+      payment_keys: Object.keys(payment),
+      paymentData: JSON.stringify(paymentData).substring(0, 800)
     });
 
     // Si le paiement est confirmé, mettre à jour la base de données
