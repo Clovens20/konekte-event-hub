@@ -131,12 +131,12 @@ const AdminInscriptions = () => {
       if (context?.previousData && context?.queryKey) {
         queryClient.setQueryData(context.queryKey, context.previousData);
       }
-      showError(error, 'Erreur lors de la mise à jour');
+      showError(error, 'Erè lè w ap mete ajou');
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['inscriptions-admin'] });
       queryClient.invalidateQueries({ queryKey: ['inscription-count'] });
-      toast({ title: 'Statut mis à jour', description: 'Le statut de l\'inscription a été modifié.' });
+      toast({ title: 'Estat mete ajou', description: 'Estat enskripsyon an modifye.' });
     },
   });
 
@@ -180,7 +180,7 @@ const AdminInscriptions = () => {
       });
     },
     onError: (error) => {
-      showError(error, 'Erreur lors de la suppression');
+      showError(error, 'Erè lè w ap efase');
     },
   });
 
@@ -212,7 +212,7 @@ const AdminInscriptions = () => {
       const { data: allInscriptions, error } = await query.order('created_at', { ascending: false });
       
       if (error) {
-        showError(error, 'Erreur lors de l\'export');
+        showError(error, 'Erè lè w ap ekspòte');
         setIsExporting(false);
         return;
       }
@@ -227,7 +227,7 @@ const AdminInscriptions = () => {
           'Montant Restant (HTG)': montantRestant,
           'Email': i.email,
           'Niveau d\'Expérience': i.niveau_experience,
-          'Statut': i.statut,
+          'Estat': i.statut,
           'Pourcentage Payé': `${i.pourcentage_paye}%`,
           'Code Promo': i.code_promo || '-',
           'Date Inscription': format(new Date(i.created_at), 'dd/MM/yyyy HH:mm'),
@@ -267,12 +267,12 @@ const AdminInscriptions = () => {
       URL.revokeObjectURL(url);
       
       toast({ 
-        title: 'Export réussi', 
-        description: `${exportData.length} inscription(s) exportée(s) avec succès.` 
+        title: 'Ekspòt reyisi', 
+        description: `${exportData.length} enskripsyon ekspòte avèk siksè.` 
       });
     } catch (error) {
       logError(error, 'ExportExcel');
-      showError(error, 'Erreur lors de l\'export');
+      showError(error, 'Erè lè w ap ekspòte');
     } finally {
       setIsExporting(false);
     }
@@ -281,11 +281,11 @@ const AdminInscriptions = () => {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'Confirmé':
-        return <Badge className="bg-green-500/10 text-green-600 border-green-500/20">Confirmé</Badge>;
+        return <Badge className="bg-green-500/10 text-green-600 border-green-500/20">Konfime</Badge>;
       case 'En attente':
-        return <Badge className="bg-yellow-500/10 text-yellow-600 border-yellow-500/20">En attente</Badge>;
+        return <Badge className="bg-yellow-500/10 text-yellow-600 border-yellow-500/20">Ap tann</Badge>;
       case 'Annulé':
-        return <Badge className="bg-red-500/10 text-red-600 border-red-500/20">Annulé</Badge>;
+        return <Badge className="bg-red-500/10 text-red-600 border-red-500/20">Anile</Badge>;
       default:
         return <Badge variant="secondary">{status}</Badge>;
     }
@@ -294,7 +294,7 @@ const AdminInscriptions = () => {
   if (isLoading) {
     return (
       <div className="space-y-6">
-        <div><h1 className="text-3xl font-bold">Inscriptions</h1></div>
+        <div><h1 className="text-3xl font-bold">Enskripsyon</h1></div>
         <Skeleton className="h-[600px]" />
       </div>
     );
@@ -304,20 +304,20 @@ const AdminInscriptions = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Inscriptions</h1>
-          <p className="text-muted-foreground">{totalCount} inscription(s)</p>
+          <h1 className="text-3xl font-bold">Enskripsyon</h1>
+          <p className="text-muted-foreground">{totalCount} enskripsyon</p>
         </div>
         <div className="flex gap-2">
           <Button onClick={exportToExcel} disabled={isExporting}>
             {isExporting ? (
               <>
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                Export en cours...
+                Ap ekspòte...
               </>
             ) : (
               <>
                 <Download className="mr-2 h-4 w-4" />
-                Exporter Excel
+                Ekspòte Excel
               </>
             )}
           </Button>
@@ -327,33 +327,33 @@ const AdminInscriptions = () => {
               <AlertDialogTrigger asChild>
                 <Button variant="destructive" disabled={isDeletingAll || deleteAllMutation.isPending}>
                   <Trash2 className="mr-2 h-4 w-4" />
-                  Supprimer tout
+                  Efase tout
                 </Button>
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
                   <AlertDialogTitle className="flex items-center gap-2">
                     <AlertTriangle className="h-5 w-5 text-destructive" />
-                    Confirmer la suppression
+                    Konfime efase
                   </AlertDialogTitle>
                   <AlertDialogDescription className="space-y-2">
                     <p className="font-semibold text-foreground">
-                      Êtes-vous sûr de vouloir supprimer toutes les inscriptions ?
+                      Ou sèten ou vle efase tout enskripsyon yo ?
                     </p>
                     <p>
-                      Cette action supprimera définitivement <strong>{totalCount} inscription(s)</strong> de la base de données.
+                      Aksyon sa a ap efase nèt <strong>{totalCount} enskripsyon</strong> nan baz done a.
                     </p>
                     <p className="text-destructive font-medium">
-                      ⚠️ Cette action est irréversible et ne peut pas être annulée.
+                      ⚠️ Aksyon sa a pa ka ranvèse.
                     </p>
                     <p className="text-sm text-muted-foreground mt-2">
-                      Si vous souhaitez conserver les données, exportez-les d'abord en Excel avant de supprimer.
+                      Si ou vle kenbe done yo, ekspòte yo an Excel anvan ou efase.
                     </p>
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                   <AlertDialogCancel disabled={isDeletingAll || deleteAllMutation.isPending}>
-                    Annuler
+                    Anile
                   </AlertDialogCancel>
                   <AlertDialogAction
                     onClick={handleDeleteAll}
@@ -363,12 +363,12 @@ const AdminInscriptions = () => {
                     {isDeletingAll || deleteAllMutation.isPending ? (
                       <>
                         <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                        Suppression...
+                        Ap efase...
                       </>
                     ) : (
                       <>
                         <Trash2 className="mr-2 h-4 w-4" />
-                        Oui, supprimer tout
+                        Wi, efase tout
                       </>
                     )}
                   </AlertDialogAction>
@@ -387,7 +387,7 @@ const AdminInscriptions = () => {
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
-                  placeholder="Rechercher..."
+                  placeholder="Chache..."
                   value={search}
                   onChange={(e) => { 
                     setSearch(e.target.value); 
@@ -403,21 +403,21 @@ const AdminInscriptions = () => {
               </div>
             </div>
             <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v); setPage(1); }}>
-              <SelectTrigger className="w-[150px]"><SelectValue placeholder="Statut" /></SelectTrigger>
+              <SelectTrigger className="w-[150px]"><SelectValue placeholder="Estat" /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Tous les statuts</SelectItem>
-                <SelectItem value="Confirmé">Confirmé</SelectItem>
-                <SelectItem value="En attente">En attente</SelectItem>
-                <SelectItem value="Annulé">Annulé</SelectItem>
+                <SelectItem value="all">Tout estat</SelectItem>
+                <SelectItem value="Confirmé">Konfime</SelectItem>
+                <SelectItem value="En attente">Ap tann</SelectItem>
+                <SelectItem value="Annulé">Anile</SelectItem>
               </SelectContent>
             </Select>
             <Select value={levelFilter} onValueChange={(v) => { setLevelFilter(v); setPage(1); }}>
-              <SelectTrigger className="w-[150px]"><SelectValue placeholder="Niveau" /></SelectTrigger>
+              <SelectTrigger className="w-[150px]"><SelectValue placeholder="Nivo" /></SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">Tous les niveaux</SelectItem>
-                <SelectItem value="Débutant">Débutant</SelectItem>
-                <SelectItem value="Intermédiaire">Intermédiaire</SelectItem>
-                <SelectItem value="Avancé">Avancé</SelectItem>
+                <SelectItem value="all">Tout nivo</SelectItem>
+                <SelectItem value="Débutant">Kòmanse</SelectItem>
+                <SelectItem value="Intermédiaire">Mwayen</SelectItem>
+                <SelectItem value="Avancé">Avanse</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -430,14 +430,14 @@ const AdminInscriptions = () => {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Nom</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Téléphone</TableHead>
-                <TableHead>Niveau</TableHead>
-                <TableHead>Statut</TableHead>
-                <TableHead>Montant Payé</TableHead>
-                <TableHead>Montant Restant</TableHead>
-                <TableHead>Date</TableHead>
+                <TableHead>Non</TableHead>
+                <TableHead>Imèl</TableHead>
+                <TableHead>Telefòn</TableHead>
+                <TableHead>Nivo</TableHead>
+                <TableHead>Estat</TableHead>
+                <TableHead>Montan peye</TableHead>
+                <TableHead>Montan ki rete</TableHead>
+                <TableHead>Dat</TableHead>
                 <TableHead className="w-[50px]"></TableHead>
               </TableRow>
             </TableHeader>
@@ -445,7 +445,7 @@ const AdminInscriptions = () => {
               {inscriptions.length === 0 ? (
                 <TableRow>
                   <TableCell colSpan={9} className="text-center py-8 text-muted-foreground">
-                    Aucune inscription trouvée
+                    Pa jwenn okenn enskripsyon
                   </TableCell>
                 </TableRow>
               ) : (
@@ -468,7 +468,7 @@ const AdminInscriptions = () => {
                         {montantRestant > 0 ? (
                           <div className="font-medium text-orange-600">{formatMontant(montantRestant)} HTG</div>
                         ) : (
-                          <div className="font-medium text-green-600">Payé intégralement</div>
+                          <div className="font-medium text-green-600">Peye an antye</div>
                         )}
                       </TableCell>
                       <TableCell>{format(new Date(i.created_at), 'dd MMM yyyy', { locale: fr })}</TableCell>
@@ -485,14 +485,14 @@ const AdminInscriptions = () => {
                             disabled={i.statut === 'Confirmé' || updateStatusMutation.isPending}
                           >
                             <CheckCircle className="mr-2 h-4 w-4" />
-                            Confirmer
+                            Konfime
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={() => updateStatusMutation.mutate({ id: i.id, status: 'En attente' })}
                             disabled={i.statut === 'En attente' || updateStatusMutation.isPending}
                           >
                             <Clock className="mr-2 h-4 w-4" />
-                            Mettre en attente
+                            Mete an tann
                           </DropdownMenuItem>
                           <DropdownMenuItem
                             onClick={() => updateStatusMutation.mutate({ id: i.id, status: 'Annulé' })}
@@ -500,7 +500,7 @@ const AdminInscriptions = () => {
                             className="text-destructive"
                           >
                             <XCircle className="mr-2 h-4 w-4" />
-                            Annuler
+                            Anile
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -520,7 +520,7 @@ const AdminInscriptions = () => {
           <Button variant="outline" size="icon" disabled={page === 1} onClick={() => setPage(page - 1)}>
             <ChevronLeft className="h-4 w-4" />
           </Button>
-          <span className="text-sm">Page {page} sur {totalPages}</span>
+          <span className="text-sm">Paj {page} sou {totalPages}</span>
           <Button variant="outline" size="icon" disabled={page === totalPages} onClick={() => setPage(page + 1)}>
             <ChevronRight className="h-4 w-4" />
           </Button>

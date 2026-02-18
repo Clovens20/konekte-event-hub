@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import type { SeminarInfo, ProgramModule, Benefit, FooterConfig } from '@/lib/types';
+import type { SeminarInfo, ProgramModule, Benefit, FooterConfig, FormationModule, SiteText } from '@/lib/types';
 import { logError } from '@/lib/error-handler';
 
 export const useSeminarInfo = () => {
@@ -94,6 +94,46 @@ export const useInscriptionCount = () => {
         throw error;
       }
       return count || 0;
+    },
+  });
+};
+
+export const useFormationModules = () => {
+  return useQuery({
+    queryKey: ['formation-modules'],
+    queryFn: async (): Promise<FormationModule[]> => {
+      const { data, error } = await supabase
+        .from('formation_modules')
+        .select('*')
+        .order('ordre', { ascending: true });
+      if (error) {
+        logError(error, 'useFormationModules');
+        throw error;
+      }
+      return (data || []).map((row) => ({
+        ...row,
+        points: Array.isArray(row.points) ? row.points : [],
+      })) as FormationModule[];
+    },
+  });
+};
+
+export const useSiteTexts = () => {
+  return useQuery({
+    queryKey: ['site-texts'],
+    queryFn: async (): Promise<Record<string, string>> => {
+      const { data, error } = await supabase
+        .from('site_texts')
+        .select('key, value');
+      if (error) {
+        logError(error, 'useSiteTexts');
+        throw error;
+      }
+      const map: Record<string, string> = {};
+      (data || []).forEach((row: SiteText) => {
+        map[row.key] = row.value ?? '';
+      });
+      return map;
     },
   });
 };

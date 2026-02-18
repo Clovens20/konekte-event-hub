@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
-import { useSeminarInfo, useInscriptionCount } from '@/hooks/useSeminarData';
+import { useInscriptionCount } from '@/hooks/useSeminarData';
+import { PLACES_DEFAULT_CAPACITY, LABEL_PLAS_DISPONIB } from '@/lib/constants';
 
 interface HeaderProps {
   onOpenModal: () => void;
@@ -45,10 +46,10 @@ const GGTCLogo = () => {
 
 export const Header = ({ onOpenModal }: HeaderProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const { data: seminarInfo } = useSeminarInfo();
   const { data: inscriptionCount = 0 } = useInscriptionCount();
 
-  const placesRestantes = (seminarInfo?.nombre_places_total || 100) - inscriptionCount;
+  // Toujours 250 comme capacité affichée ; diminue avec chaque inscription
+  const placesRestantes = PLACES_DEFAULT_CAPACITY - inscriptionCount;
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-lg border-b border-border/50">
@@ -63,13 +64,13 @@ export const Header = ({ onOpenModal }: HeaderProps) => {
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center gap-8">
             <a href="#accueil" className="text-muted-foreground hover:text-foreground transition-colors">
-              Accueil
+              Akèy
             </a>
             <a href="#programme" className="text-muted-foreground hover:text-foreground transition-colors">
-              Programme
+              Pwogram
             </a>
             <a href="#contact" className="text-muted-foreground hover:text-foreground transition-colors">
-              Contact
+              Kontak
             </a>
           </nav>
 
@@ -77,10 +78,10 @@ export const Header = ({ onOpenModal }: HeaderProps) => {
           <div className="hidden md:flex items-center gap-4">
             <div className="badge-count">
               <span className="animate-pulse-soft">●</span>
-              {placesRestantes} places restantes
+              {placesRestantes} {LABEL_PLAS_DISPONIB}
             </div>
             <button onClick={onOpenModal} className="btn-primary text-sm py-2.5 px-5">
-              Réserver ma place
+              Rezève kote m
             </button>
           </div>
 
@@ -102,32 +103,32 @@ export const Header = ({ onOpenModal }: HeaderProps) => {
                 className="text-muted-foreground hover:text-foreground transition-colors py-2"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Accueil
+                Akèy
               </a>
               <a 
                 href="#programme" 
                 className="text-muted-foreground hover:text-foreground transition-colors py-2"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Programme
+                Pwogram
               </a>
               <a 
                 href="#contact" 
                 className="text-muted-foreground hover:text-foreground transition-colors py-2"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Contact
+                Kontak
               </a>
               <div className="pt-4 space-y-3">
                 <div className="badge-count w-fit">
                   <span className="animate-pulse-soft">●</span>
-                  {placesRestantes} places restantes
+                  {placesRestantes} {LABEL_PLAS_DISPONIB}
                 </div>
                 <button 
                   onClick={() => { onOpenModal(); setIsMenuOpen(false); }} 
                   className="btn-primary w-full text-sm py-2.5"
                 >
-                  Réserver ma place
+                  Rezève kote m
                 </button>
               </div>
             </nav>

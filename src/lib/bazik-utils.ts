@@ -35,7 +35,7 @@ export const createBazikPayment = async (
       return {
         success: false,
         transactionId: request.transactionId,
-        message: 'Configuration Supabase manquante',
+        message: 'Konfigirasyon Supabase manke',
       };
     }
 
@@ -56,7 +56,7 @@ export const createBazikPayment = async (
           transaction_id: request.transactionId,
           email: request.email,
           phone_number: request.phoneNumber,
-          description: request.description || 'Inscription séminaire',
+          description: request.description || 'Enskripsyon seminè',
           first_name: request.firstName,
           last_name: request.lastName,
         }),
@@ -128,7 +128,7 @@ export const verifyBazikPayment = async (
     if (!supabaseUrl || !supabaseKey) {
       return {
         success: false,
-        message: 'Configuration Supabase manquante',
+        message: 'Konfigirasyon Supabase manke',
       };
     }
 

@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS public.seminar_info (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   titre TEXT NOT NULL DEFAULT 'Maîtriser l''IA pour le Développement Web',
   description TEXT NOT NULL DEFAULT 'Formez-vous aux outils d''IA essentiels pour développer des applications web.',
-  lieu TEXT NOT NULL DEFAULT 'Saint-Marc, Haïti',
+  lieu TEXT NOT NULL DEFAULT 'En ligne',
   date_debut DATE NOT NULL DEFAULT '2025-03-15',
   date_fin DATE NOT NULL DEFAULT '2025-03-17',
   nombre_places_total INTEGER NOT NULL DEFAULT 100,
@@ -118,7 +118,7 @@ CREATE TABLE IF NOT EXISTS public.footer_config (
   copyright TEXT NOT NULL DEFAULT '© 2025 Konekte Group. Tous droits réservés.',
   email TEXT NOT NULL DEFAULT 'contact@konekte.ht',
   telephone TEXT NOT NULL DEFAULT '+509 XXXX XXXX',
-  adresse TEXT NOT NULL DEFAULT 'Saint-Marc, Haïti',
+  adresse TEXT NOT NULL DEFAULT 'En ligne',
   facebook TEXT,
   instagram TEXT,
   linkedin TEXT,
@@ -377,7 +377,7 @@ SELECT
   gen_random_uuid(),
   'Maîtriser l''IA pour le Développement Web',
   'Formez-vous aux outils d''IA essentiels pour développer des applications web modernes.',
-  'Saint-Marc, Haïti',
+  'En ligne',
   '2025-03-15',
   '2025-03-17',
   100,
@@ -392,7 +392,7 @@ SELECT
   '© 2025 Konekte Group. Tous droits réservés.',
   'contact@konekte.ht',
   '+509 XXXX XXXX',
-  'Saint-Marc, Haïti'
+  'En ligne'
 WHERE NOT EXISTS (SELECT 1 FROM public.footer_config);
 
 -- ============================================

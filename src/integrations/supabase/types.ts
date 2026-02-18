@@ -105,10 +105,12 @@ export type Database = {
           email: string
           id: string
           montant_paye: number
+          montant_total: number | null
           motivation: string | null
           niveau_experience: Database["public"]["Enums"]["experience_level"]
           nom_complet: string
           pourcentage_paye: Database["public"]["Enums"]["payment_percentage"]
+          remaining_transaction_id: string | null
           statut: Database["public"]["Enums"]["inscription_status"]
           telephone: string
           transaction_id: string | null
@@ -119,10 +121,12 @@ export type Database = {
           email: string
           id?: string
           montant_paye: number
+          montant_total?: number | null
           motivation?: string | null
           niveau_experience: Database["public"]["Enums"]["experience_level"]
           nom_complet: string
           pourcentage_paye: Database["public"]["Enums"]["payment_percentage"]
+          remaining_transaction_id?: string | null
           statut?: Database["public"]["Enums"]["inscription_status"]
           telephone: string
           transaction_id?: string | null
@@ -133,10 +137,12 @@ export type Database = {
           email?: string
           id?: string
           montant_paye?: number
+          montant_total?: number | null
           motivation?: string | null
           niveau_experience?: Database["public"]["Enums"]["experience_level"]
           nom_complet?: string
           pourcentage_paye?: Database["public"]["Enums"]["payment_percentage"]
+          remaining_transaction_id?: string | null
           statut?: Database["public"]["Enums"]["inscription_status"]
           telephone?: string
           transaction_id?: string | null

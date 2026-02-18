@@ -64,11 +64,11 @@ const AdminPromoCodes = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['promo-codes'] });
       queryClient.refetchQueries({ queryKey: ['promo-codes'], type: 'active' });
-      toast({ title: 'Succès', description: 'Code promo créé avec succès.' });
+      toast({ title: 'Siksè', description: 'Kòd promosyon kreye avèk siksè.' });
       resetForm();
     },
     onError: (error) => {
-      toast({ title: 'Erreur', description: error.message, variant: 'destructive' });
+      toast({ title: 'Erè', description: error.message, variant: 'destructive' });
     },
   });
 
@@ -80,11 +80,11 @@ const AdminPromoCodes = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['promo-codes'] });
       queryClient.refetchQueries({ queryKey: ['promo-codes'], type: 'active' });
-      toast({ title: 'Succès', description: 'Code promo mis à jour.' });
+      toast({ title: 'Siksè', description: 'Kòd promosyon mete ajou.' });
       resetForm();
     },
     onError: (error) => {
-      toast({ title: 'Erreur', description: error.message, variant: 'destructive' });
+      toast({ title: 'Erè', description: error.message, variant: 'destructive' });
     },
   });
 
@@ -96,10 +96,10 @@ const AdminPromoCodes = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['promo-codes'] });
       queryClient.refetchQueries({ queryKey: ['promo-codes'], type: 'active' });
-      toast({ title: 'Succès', description: 'Code promo supprimé.' });
+      toast({ title: 'Siksè', description: 'Kòd promosyon efase.' });
     },
     onError: (error) => {
-      toast({ title: 'Erreur', description: error.message, variant: 'destructive' });
+      toast({ title: 'Erè', description: error.message, variant: 'destructive' });
     },
   });
 
@@ -113,7 +113,7 @@ const AdminPromoCodes = () => {
       queryClient.refetchQueries({ queryKey: ['promo-codes'], type: 'active' });
     },
     onError: (error) => {
-      toast({ title: 'Erreur', description: error.message, variant: 'destructive' });
+      toast({ title: 'Erè', description: error.message, variant: 'destructive' });
     },
   });
 
@@ -171,7 +171,7 @@ const AdminPromoCodes = () => {
     return (
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold">Codes Promo</h1>
+          <h1 className="text-3xl font-bold">Kòd Promosyon</h1>
           <p className="text-muted-foreground">Gérez les codes promotionnels</p>
         </div>
         <Skeleton className="h-[400px]" />
@@ -183,23 +183,23 @@ const AdminPromoCodes = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Codes Promo</h1>
+          <h1 className="text-3xl font-bold">Kòd Promosyon</h1>
           <p className="text-muted-foreground">Gérez les codes promotionnels</p>
         </div>
         <Dialog open={isDialogOpen} onOpenChange={(open) => { setIsDialogOpen(open); if (!open) resetForm(); }}>
           <DialogTrigger asChild>
             <Button>
               <Plus className="mr-2 h-4 w-4" />
-              Créer un code
+              Kreye yon kòd
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>{editingCode ? 'Modifier le code' : 'Créer un code promo'}</DialogTitle>
+              <DialogTitle>{editingCode ? 'Modifye kòd la' : 'Kreye yon kòd promosyon'}</DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="code">Code</Label>
+                <Label htmlFor="code">Kòd</Label>
                 <Input
                   id="code"
                   value={formData.code}
@@ -210,7 +210,7 @@ const AdminPromoCodes = () => {
               </div>
               <div className="grid gap-4 grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="type">Type</Label>
+                  <Label htmlFor="type">Tip</Label>
                   <Select 
                     value={formData.type} 
                     onValueChange={(value: 'percentage' | 'fixed') => setFormData({ ...formData, type: value })}
@@ -219,13 +219,13 @@ const AdminPromoCodes = () => {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="percentage">Pourcentage (%)</SelectItem>
-                      <SelectItem value="fixed">Montant fixe (HTG)</SelectItem>
+                      <SelectItem value="percentage">Pousantaj (%)</SelectItem>
+                      <SelectItem value="fixed">Montan fiks (HTG)</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="valeur">Valeur</Label>
+                  <Label htmlFor="valeur">Valè</Label>
                   <Input
                     id="valeur"
                     type="number"
@@ -238,7 +238,7 @@ const AdminPromoCodes = () => {
               </div>
               <div className="grid gap-4 grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="date_expiration">Date d'expiration</Label>
+                  <Label htmlFor="date_expiration">Dat ekspirasyon</Label>
                   <Input
                     id="date_expiration"
                     type="date"
@@ -247,7 +247,7 @@ const AdminPromoCodes = () => {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="utilisations_max">Limite d'utilisations</Label>
+                  <Label htmlFor="utilisations_max">Limit itilizasyon</Label>
                   <Input
                     id="utilisations_max"
                     type="number"
@@ -264,17 +264,17 @@ const AdminPromoCodes = () => {
                   checked={formData.actif}
                   onCheckedChange={(checked) => setFormData({ ...formData, actif: checked })}
                 />
-                <Label htmlFor="actif">Actif</Label>
+                <Label htmlFor="actif">Aktif</Label>
               </div>
               <div className="flex justify-end gap-2">
                 <Button type="button" variant="outline" onClick={resetForm}>
-                  Annuler
-                </Button>
-                <Button type="submit" disabled={createMutation.isPending || updateMutation.isPending}>
-                  {(createMutation.isPending || updateMutation.isPending) && (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  )}
-                  {editingCode ? 'Mettre à jour' : 'Créer'}
+Anile
+                  </Button>
+                  <Button type="submit" disabled={createMutation.isPending || updateMutation.isPending}>
+                    {(createMutation.isPending || updateMutation.isPending) && (
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    )}
+                    {editingCode ? 'Mete ajou' : 'Kreye'}
                 </Button>
               </div>
             </form>
@@ -284,24 +284,24 @@ const AdminPromoCodes = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle>Codes promotionnels</CardTitle>
+          <CardTitle>Kòd promosyon</CardTitle>
         </CardHeader>
         <CardContent>
           {promoCodes?.length === 0 ? (
             <p className="text-muted-foreground text-center py-8">
-              Aucun code promo pour le moment
+              Pa gen kòd promosyon pou kounye a
             </p>
           ) : (
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Code</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Valeur</TableHead>
-                  <TableHead>Expiration</TableHead>
-                  <TableHead>Utilisations</TableHead>
-                  <TableHead>Actif</TableHead>
-                  <TableHead className="w-24">Actions</TableHead>
+                  <TableHead>Kòd</TableHead>
+                  <TableHead>Tip</TableHead>
+                  <TableHead>Valè</TableHead>
+                  <TableHead>Ekspirasyon</TableHead>
+                  <TableHead>Itilizasyon</TableHead>
+                  <TableHead>Aktif</TableHead>
+                  <TableHead className="w-24">Aksyon</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -310,7 +310,7 @@ const AdminPromoCodes = () => {
                     <TableCell className="font-mono font-bold">{code.code}</TableCell>
                     <TableCell>
                       <Badge variant="secondary">
-                        {code.type === 'percentage' ? 'Pourcentage' : 'Fixe'}
+                        {code.type === 'percentage' ? 'Pousantaj' : 'Fiks'}
                       </Badge>
                     </TableCell>
                     <TableCell>

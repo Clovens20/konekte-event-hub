@@ -29,7 +29,7 @@ const PaymentCallback = () => {
 
         if (!transactionId) {
           setStatus('error');
-          setMessage('Transaction introuvable');
+          setMessage('Tranzaksyon pa jwenn');
           return;
         }
 
@@ -44,11 +44,11 @@ const PaymentCallback = () => {
           queryClient.invalidateQueries({ queryKey: ['inscription-count'] });
           queryClient.invalidateQueries({ queryKey: ['inscriptions-admin'] });
           setStatus('success');
-          setMessage('Paiement confirmé ! Votre inscription est validée.');
+          setMessage('Peman konfime ! Enskripsyon w valide.');
           
           toast({
-            title: '🎉 Paiement réussi !',
-            description: 'Votre inscription a été confirmée. Vous recevrez un email de confirmation.',
+            title: '🎉 Peman reyisi !',
+            description: 'Enskripsyon w konfime. W ap resevwa yon imèl konfirmasyon.',
           });
 
           // Nettoyer sessionStorage
@@ -63,11 +63,11 @@ const PaymentCallback = () => {
           // On NE vérifie PAS le statut en base car il pourrait être erroné
           // On affiche un message d'attente
           setStatus('error');
-          setMessage(verificationResult.message || 'Le paiement n\'a pas encore été confirmé par la banque. Veuillez patienter quelques instants.');
+          setMessage(verificationResult.message || 'Peman an poko konfime pa labank. Tanpri tann kèk moman.');
           
           toast({
-            title: 'Paiement en attente',
-            description: 'Votre paiement est en cours de traitement. Vous serez notifié une fois qu\'il sera confirmé.',
+            title: 'Peman ap tann',
+            description: 'Peman w ap trete. W ap resevwa yon notifikasyon lè l konfime.',
             variant: 'default',
           });
 
@@ -80,11 +80,11 @@ const PaymentCallback = () => {
       } catch (error) {
         logError(error, 'PaymentCallback');
         setStatus('error');
-        setMessage('Erreur lors de la vérification du paiement.');
+        setMessage('Erè lè w ap verifye peman an.');
         
         toast({
-          title: 'Erreur',
-          description: 'Une erreur est survenue. Votre inscription est en attente.',
+          title: 'Erè',
+          description: 'Yon erè rive. Enskripsyon w ap tann.',
           variant: 'destructive',
         });
       }
@@ -99,30 +99,30 @@ const PaymentCallback = () => {
         {status === 'loading' && (
           <>
             <Loader2 className="w-16 h-16 animate-spin text-primary mx-auto mb-4" />
-            <h2 className="text-2xl font-bold mb-2">Vérification du paiement...</h2>
-            <p className="text-muted-foreground">Veuillez patienter</p>
+            <h2 className="text-2xl font-bold mb-2">Ap verifye peman...</h2>
+            <p className="text-muted-foreground">Tanpri tann</p>
           </>
         )}
 
         {status === 'success' && (
           <>
             <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold mb-2 text-green-600">Paiement confirmé !</h2>
+            <h2 className="text-2xl font-bold mb-2 text-green-600">Peman konfime !</h2>
             <p className="text-muted-foreground mb-4">{message}</p>
-            <p className="text-sm text-muted-foreground">Redirection en cours...</p>
+            <p className="text-sm text-muted-foreground">Ap redirekte...</p>
           </>
         )}
 
         {status === 'error' && (
           <>
             <XCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold mb-2 text-red-600">Paiement non confirmé</h2>
+            <h2 className="text-2xl font-bold mb-2 text-red-600">Peman pa konfime</h2>
             <p className="text-muted-foreground mb-4">{message}</p>
             <button
               onClick={() => navigate('/')}
               className="btn-primary"
             >
-              Retour à l'accueil
+              Tounen sou akèy la
             </button>
           </>
         )}

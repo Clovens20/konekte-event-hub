@@ -72,6 +72,22 @@ export interface FooterConfig {
   updated_at: string;
 }
 
+export interface FormationModule {
+  id: string;
+  ordre: number;
+  emoji: string;
+  titre: string;
+  subtitle: string | null;
+  points: string[];
+  created_at: string;
+}
+
+export interface SiteText {
+  key: string;
+  value: string;
+  updated_at: string;
+}
+
 export type ExperienceLevel = 'Débutant' | 'Intermédiaire' | 'Avancé';
 export type PaymentPercentage = '25' | '50' | '100';
 export type InscriptionStatus = 'Confirmé' | 'En attente' | 'Annulé';

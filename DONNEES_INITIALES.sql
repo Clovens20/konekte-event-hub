@@ -7,14 +7,17 @@
 -- Met à jour seulement si une ligne existe déjà
 UPDATE public.seminar_info
 SET 
-  titre = 'Maîtriser l''IA pour le Développement Web',
-  description = 'Séminaire intensif de 3 jours pour apprendre à utiliser les outils d''IA dans le développement web moderne. Formez-vous aux technologies qui révolutionnent notre façon de coder.',
-  lieu = 'Saint-Marc, Haïti',
+  titre = 'Fòmasyon an kreyòl sou AI kodè',
+  description = 'Aprann teknoloji IA ki ap révòlsyone kòd la — fòmasyon enligne, kontini, ak asistans pou ou pa janm bloke!',
+  lieu = 'En ligne',
   date_debut = '2025-03-15',
   date_fin = '2025-03-17',
-  nombre_places_total = 100,
+  nombre_places_total = 250,
   organisateur = 'Konekte Group',
   prix_base = 5000,
+  program_badge_text = 'Pwogram konplè',
+  program_title = 'Fòmasyon Anliy Kontini — Aksè 24/7 ak Asistans Pèsonalize',
+  program_subtitle = 'Aprann zouti IA ki ap transfòme devlopman web ak mobil modèn nan — nan pwòp rítm ou, nenpòt ki lè.',
   updated_at = now()
 WHERE id = (SELECT id FROM public.seminar_info LIMIT 1);
 
@@ -22,11 +25,11 @@ WHERE id = (SELECT id FROM public.seminar_info LIMIT 1);
 INSERT INTO public.seminar_info (titre, description, lieu, date_debut, date_fin, nombre_places_total, organisateur, prix_base)
 SELECT 
   'Maîtriser l''IA pour le Développement Web',
-  'Séminaire intensif de 3 jours pour apprendre à utiliser les outils d''IA dans le développement web moderne. Formez-vous aux technologies qui révolutionnent notre façon de coder.',
-  'Saint-Marc, Haïti',
+  'Aprann teknoloji IA ki ap révòlsyone kòd la — fòmasyon enligne, kontini, ak asistans pou ou pa janm bloke!',
+  'En ligne',
   '2025-03-15',
   '2025-03-17',
-  100,
+  250,
   'Konekte Group',
   5000
 WHERE NOT EXISTS (SELECT 1 FROM public.seminar_info);
@@ -53,11 +56,9 @@ WHERE NOT EXISTS (
 -- 3. Insérer des avantages de test (seulement si la table est vide)
 INSERT INTO public.benefits (icon, titre, description, ordre)
 SELECT * FROM (VALUES 
-  ('Award', 'Certificat de participation', 'Obtenez un certificat reconnu à la fin du séminaire', 1),
-  ('Users', 'Réseau professionnel', 'Rencontrez d''autres développeurs passionnés par l''IA', 2),
-  ('BookOpen', 'Support continu', 'Accès à une communauté et ressources après le séminaire', 3),
-  ('Code', 'Projets pratiques', 'Travaillez sur des projets réels avec assistance IA', 4),
-  ('Zap', 'Technologies modernes', 'Découvrez les dernières innovations en développement web', 5)
+  ('BookOpen', 'Support continu', 'Accès à une communauté et ressources après le séminaire', 1),
+  ('Code', 'Projets pratiques', 'Travaillez sur des projets réels avec assistance IA', 2),
+  ('Zap', 'Technologies modernes', 'Découvrez les dernières innovations en développement web', 3)
 ) AS v(icon, titre, description, ordre)
 WHERE NOT EXISTS (
   SELECT 1 FROM public.benefits 
@@ -79,7 +80,7 @@ SET
   copyright = '© 2025 Konekte Group. Tous droits réservés.',
   email = 'contact@konekte.ht',
   telephone = '+509 3712 3456',
-  adresse = 'Saint-Marc, Haïti',
+  adresse = 'En ligne',
   facebook = 'https://facebook.com/konektegroup',
   instagram = 'https://instagram.com/konektegroup',
   linkedin = 'https://linkedin.com/company/konektegroup',
@@ -92,7 +93,7 @@ SELECT
   '© 2025 Konekte Group. Tous droits réservés.',
   'contact@konekte.ht',
   '+509 3712 3456',
-  'Saint-Marc, Haïti',
+  'En ligne',
   'https://facebook.com/konektegroup',
   'https://instagram.com/konektegroup',
   'https://linkedin.com/company/konektegroup'

@@ -12,7 +12,7 @@ VALUES (
   'content',
   'Maîtrisez l''IA pour le Développement Web
 
-Séminaire intensif de 3 jours pour apprendre à utiliser les outils d''IA dans le développement web moderne. Formez-vous aux technologies qui révolutionnent notre façon de coder.
+Aprann teknoloji IA ki ap révòlsyone kòd la — fòmasyon enligne, kontini, ak asistans pou ou pa janm bloke!
 
 Réserver ma place',
   'Contenu de la section Hero (titre, description, CTA)',
@@ -27,13 +27,7 @@ VALUES (
   'content/benefits',
   'benefits.txt',
   'content',
-  'Certificat de participation
-Obtenez un certificat reconnu à la fin du séminaire
-
-Réseau professionnel
-Rencontrez d''autres développeurs passionnés par l''IA
-
-Support continu
+  'Support continu
 Accès à une communauté et ressources après le séminaire
 
 Projets pratiques

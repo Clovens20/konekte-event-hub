@@ -60,9 +60,9 @@ const AdminProgram = () => {
   useEffect(() => {
     if (seminarInfo) {
       setSectionFormData({
-        program_badge_text: seminarInfo.program_badge_text || 'Programme complet',
-        program_title: seminarInfo.program_title || 'Programme du Séminaire',
-        program_subtitle: seminarInfo.program_subtitle || 'Trois jours intensifs pour maîtriser les outils d\'IA qui transforment le développement web',
+        program_badge_text: seminarInfo.program_badge_text || 'Pwogram konplè',
+        program_title: seminarInfo.program_title || 'Pwogram Seminè a',
+        program_subtitle: seminarInfo.program_subtitle || 'Twa jou entansif pou mete men sou zouti IA ki transfòme devlopman entènèt',
       });
     }
   }, [seminarInfo]);
@@ -75,11 +75,11 @@ const AdminProgram = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['program-modules'] });
       queryClient.refetchQueries({ queryKey: ['program-modules'], type: 'active' });
-      toast({ title: 'Succès', description: 'Module ajouté avec succès.' });
+      toast({ title: 'Siksè', description: 'Modil ajoute avèk siksè.' });
       resetForm();
     },
     onError: (error) => {
-      toast({ title: 'Erreur', description: error.message, variant: 'destructive' });
+      toast({ title: 'Erè', description: error.message, variant: 'destructive' });
     },
   });
 
@@ -91,11 +91,11 @@ const AdminProgram = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['program-modules'] });
       queryClient.refetchQueries({ queryKey: ['program-modules'], type: 'active' });
-      toast({ title: 'Succès', description: 'Module mis à jour.' });
+      toast({ title: 'Siksè', description: 'Modil mete ajou.' });
       resetForm();
     },
     onError: (error) => {
-      toast({ title: 'Erreur', description: error.message, variant: 'destructive' });
+      toast({ title: 'Erè', description: error.message, variant: 'destructive' });
     },
   });
 
@@ -107,17 +107,17 @@ const AdminProgram = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['program-modules'] });
       queryClient.refetchQueries({ queryKey: ['program-modules'], type: 'active' });
-      toast({ title: 'Succès', description: 'Module supprimé.' });
+      toast({ title: 'Siksè', description: 'Modil efase.' });
     },
     onError: (error) => {
-      toast({ title: 'Erreur', description: error.message, variant: 'destructive' });
+      toast({ title: 'Erè', description: error.message, variant: 'destructive' });
     },
   });
 
   // Mutation pour mettre à jour la section Programme
   const updateSectionMutation = useMutation({
     mutationFn: async (data: typeof sectionFormData) => {
-      if (!seminarInfo?.id) throw new Error('Informations du séminaire non trouvées');
+      if (!seminarInfo?.id) throw new Error('Pa jwenn enfòmasyon seminè a');
       const { error } = await supabase
         .from('seminar_info')
         .update({
@@ -132,11 +132,11 @@ const AdminProgram = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['seminar-info'] });
       queryClient.refetchQueries({ queryKey: ['seminar-info'], type: 'active' });
-      toast({ title: 'Succès', description: 'Section Programme mise à jour.' });
+      toast({ title: 'Siksè', description: 'Seksyon Pwogram mete ajou.' });
       setIsSectionDialogOpen(false);
     },
     onError: (error) => {
-      toast({ title: 'Erreur', description: error.message, variant: 'destructive' });
+      toast({ title: 'Erè', description: error.message, variant: 'destructive' });
     },
   });
 
@@ -167,7 +167,7 @@ const AdminProgram = () => {
   };
 
   const handleDelete = (id: string) => {
-    if (confirm('Êtes-vous sûr de vouloir supprimer ce module ?')) {
+    if (confirm('Ou sèten ou vle efase modil sa a ?')) {
       deleteMutation.mutate(id);
     }
   };
@@ -176,8 +176,8 @@ const AdminProgram = () => {
     return (
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold">Programme du Séminaire</h1>
-          <p className="text-muted-foreground">Gérez les modules du programme</p>
+          <h1 className="text-3xl font-bold">Pwogram Seminè a</h1>
+          <p className="text-muted-foreground">Jere modil pwogram nan</p>
         </div>
         <Skeleton className="h-[400px]" />
       </div>
@@ -188,59 +188,59 @@ const AdminProgram = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Programme du Séminaire</h1>
-          <p className="text-muted-foreground">Gérez les modules du programme</p>
+<h1 className="text-3xl font-bold">Pwogram Seminè a</h1>
+        <p className="text-muted-foreground">Jere modil pwogram nan</p>
         </div>
         <div className="flex gap-2">
           <Dialog open={isSectionDialogOpen} onOpenChange={setIsSectionDialogOpen}>
             <DialogTrigger asChild>
               <Button variant="outline">
                 <Settings className="mr-2 h-4 w-4" />
-                Modifier la section
+                Modifye seksyon an
               </Button>
             </DialogTrigger>
             <DialogContent className="max-w-2xl">
               <DialogHeader>
-                <DialogTitle>Modifier la section Programme</DialogTitle>
+                <DialogTitle>Modifye seksyon Pwogram</DialogTitle>
               </DialogHeader>
               <form onSubmit={(e) => { e.preventDefault(); updateSectionMutation.mutate(sectionFormData); }} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="program_badge_text">Badge (texte du badge)</Label>
+                  <Label htmlFor="program_badge_text">Badj (tèks badj la)</Label>
                   <Input
                     id="program_badge_text"
                     value={sectionFormData.program_badge_text}
                     onChange={(e) => setSectionFormData({ ...sectionFormData, program_badge_text: e.target.value })}
-                    placeholder="Programme complet"
+                    placeholder="Pwogram konplè"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="program_title">Titre principal</Label>
+                  <Label htmlFor="program_title">Tit prensipal</Label>
                   <Input
                     id="program_title"
                     value={sectionFormData.program_title}
                     onChange={(e) => setSectionFormData({ ...sectionFormData, program_title: e.target.value })}
-                    placeholder="Programme du Séminaire"
+                    placeholder="Pwogram Seminè a"
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="program_subtitle">Sous-titre / Description</Label>
+                  <Label htmlFor="program_subtitle">Sou-tit / Deskripsyon</Label>
                   <Textarea
                     id="program_subtitle"
                     value={sectionFormData.program_subtitle}
                     onChange={(e) => setSectionFormData({ ...sectionFormData, program_subtitle: e.target.value })}
                     rows={3}
-                    placeholder="Trois jours intensifs pour maîtriser les outils d'IA qui transforment le développement web"
+                    placeholder="Twa jou entansif pou mete men sou zouti IA ki transfòme devlopman entènèt"
                   />
                 </div>
                 <div className="flex justify-end gap-2">
                   <Button type="button" variant="outline" onClick={() => setIsSectionDialogOpen(false)}>
-                    Annuler
+                    Anile
                   </Button>
                   <Button type="submit" disabled={updateSectionMutation.isPending}>
                     {updateSectionMutation.isPending && (
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     )}
-                    Enregistrer
+                    Anrejistre
                   </Button>
                 </div>
               </form>
@@ -250,17 +250,17 @@ const AdminProgram = () => {
             <DialogTrigger asChild>
               <Button>
                 <Plus className="mr-2 h-4 w-4" />
-                Ajouter un module
+                Ajoute yon modil
               </Button>
             </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>{editingModule ? 'Modifier le module' : 'Ajouter un module'}</DialogTitle>
+              <DialogTitle>{editingModule ? 'Modifye modil la' : 'Ajoute yon modil'}</DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid gap-4 grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="jour">Jour</Label>
+                  <Label htmlFor="jour">Jou</Label>
                   <Input
                     id="jour"
                     type="number"
@@ -301,13 +301,13 @@ const AdminProgram = () => {
               </div>
               <div className="flex justify-end gap-2">
                 <Button type="button" variant="outline" onClick={resetForm}>
-                  Annuler
+                  Anile
                 </Button>
                 <Button type="submit" disabled={createMutation.isPending || updateMutation.isPending}>
                   {(createMutation.isPending || updateMutation.isPending) && (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   )}
-                  {editingModule ? 'Mettre à jour' : 'Ajouter'}
+                  {editingModule ? 'Mete ajou' : 'Ajoute'}
                 </Button>
               </div>
             </form>
@@ -318,28 +318,28 @@ const AdminProgram = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle>Modules du programme</CardTitle>
+          <CardTitle>Modil pwogram nan</CardTitle>
         </CardHeader>
         <CardContent>
           {modules?.length === 0 ? (
             <p className="text-muted-foreground text-center py-8">
-              Aucun module pour le moment
+              Pa gen modil pou kounye a
             </p>
           ) : (
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-20">Jour</TableHead>
-                  <TableHead>Titre</TableHead>
-                  <TableHead>Description</TableHead>
-                  <TableHead className="w-20">Ordre</TableHead>
-                  <TableHead className="w-24">Actions</TableHead>
+                  <TableHead className="w-20">Jou</TableHead>
+                  <TableHead>Tit</TableHead>
+                  <TableHead>Deskripsyon</TableHead>
+                  <TableHead className="w-20">Òd</TableHead>
+                  <TableHead className="w-24">Aksyon</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {modules?.map((module) => (
                   <TableRow key={module.id}>
-                    <TableCell className="font-medium">Jour {module.jour}</TableCell>
+                    <TableCell className="font-medium">Jou {module.jour}</TableCell>
                     <TableCell>{module.titre}</TableCell>
                     <TableCell className="max-w-xs truncate">{module.description}</TableCell>
                     <TableCell>{module.ordre}</TableCell>

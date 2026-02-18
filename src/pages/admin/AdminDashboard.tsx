@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useSeminarInfo } from '@/hooks/useSeminarData';
 import { StatsCard } from '@/components/admin/StatsCard';
+import { PLACES_DEFAULT_CAPACITY } from '@/lib/constants';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
@@ -33,13 +34,12 @@ const AdminDashboard = () => {
   });
 
   const totalInscriptions = inscriptions?.filter(i => i.statut !== 'Annulé').length || 0;
-  const placesRestantes = (seminarInfo?.nombre_places_total || 0) - totalInscriptions;
+  const capacity = seminarInfo?.nombre_places_total ?? PLACES_DEFAULT_CAPACITY;
+  const placesRestantes = capacity - totalInscriptions;
   const revenusConfirmes = inscriptions
     ?.filter(i => i.statut === 'Confirmé')
     .reduce((sum, i) => sum + i.montant_paye, 0) || 0;
-  const tauxRemplissage = seminarInfo?.nombre_places_total 
-    ? Math.round((totalInscriptions / seminarInfo.nombre_places_total) * 100) 
-    : 0;
+  const tauxRemplissage = capacity > 0 ? Math.round((totalInscriptions / capacity) * 100) : 0;
 
   const recentInscriptions = inscriptions?.slice(0, 5) || [];
 
@@ -54,11 +54,11 @@ const AdminDashboard = () => {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case 'Confirmé':
-        return <Badge className="bg-green-500/10 text-green-600 border-green-500/20">Confirmé</Badge>;
+        return <Badge className="bg-green-500/10 text-green-600 border-green-500/20">Konfime</Badge>;
       case 'En attente':
-        return <Badge className="bg-yellow-500/10 text-yellow-600 border-yellow-500/20">En attente</Badge>;
+        return <Badge className="bg-yellow-500/10 text-yellow-600 border-yellow-500/20">Ap tann</Badge>;
       case 'Annulé':
-        return <Badge className="bg-red-500/10 text-red-600 border-red-500/20">Annulé</Badge>;
+        return <Badge className="bg-red-500/10 text-red-600 border-red-500/20">Anile</Badge>;
       default:
         return <Badge variant="secondary">{status}</Badge>;
     }
@@ -68,8 +68,8 @@ const AdminDashboard = () => {
     return (
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold">Dashboard</h1>
-          <p className="text-muted-foreground">Vue d'ensemble du séminaire</p>
+          <h1 className="text-3xl font-bold">Tablo bò</h1>
+          <p className="text-muted-foreground">Apèsi jeneral seminè a</p>
         </div>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           {[1, 2, 3, 4].map((i) => (
@@ -83,38 +83,38 @@ const AdminDashboard = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold">Dashboard</h1>
-        <p className="text-muted-foreground">Vue d'ensemble du séminaire</p>
+        <h1 className="text-3xl font-bold">Tablo bò</h1>
+        <p className="text-muted-foreground">Apèsi jeneral seminè a</p>
       </div>
 
       {/* Stats Cards */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <StatsCard
-          title="Inscriptions Totales"
+          title="Total Enskripsyon"
           value={totalInscriptions}
           icon={Users}
-          description={`sur ${seminarInfo?.nombre_places_total || 0} places`}
+          description={`sou ${capacity} kote`}
           trend="neutral"
         />
         <StatsCard
-          title="Places Restantes"
+          title="Kote ki rete"
           value={placesRestantes}
           icon={Calendar}
-          description={placesRestantes < 10 ? 'Presque complet !' : 'Disponibles'}
+          description={placesRestantes < 10 ? 'Prèske konple !' : 'Disponib'}
           trend={placesRestantes < 10 ? 'down' : 'neutral'}
         />
         <StatsCard
-          title="Revenus Confirmés"
+          title="Revni Konfime"
           value={formatPrice(revenusConfirmes)}
           icon={Wallet}
-          description="Total des paiements confirmés"
+          description="Total peman konfime"
           trend="up"
         />
         <StatsCard
-          title="Taux de Remplissage"
+          title="Pousantaj plen"
           value={`${tauxRemplissage}%`}
           icon={TrendingUp}
-          description={tauxRemplissage >= 80 ? 'Excellent !' : 'En progression'}
+          description={tauxRemplissage >= 80 ? 'Ekselan !' : 'Ap pwogrese'}
           trend={tauxRemplissage >= 50 ? 'up' : 'neutral'}
         />
       </div>
@@ -122,12 +122,12 @@ const AdminDashboard = () => {
       {/* Recent Inscriptions */}
       <Card>
         <CardHeader>
-          <CardTitle>Inscriptions Récentes</CardTitle>
+          <CardTitle>Enskripsyon resan</CardTitle>
         </CardHeader>
         <CardContent>
           {recentInscriptions.length === 0 ? (
             <p className="text-muted-foreground text-center py-8">
-              Aucune inscription pour le moment
+              Pa gen enskripsyon pou kounye a
             </p>
           ) : (
             <div className="space-y-4">

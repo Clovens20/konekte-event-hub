@@ -24,8 +24,8 @@ const Index = () => {
   return (
     <>
       <Helmet>
-        <title>Maîtriser l'IA pour le Développement Web | Konekte Group</title>
-        <meta name="description" content="Séminaire intensif de 3 jours à Saint-Marc, Haïti. Formez-vous aux outils d'IA pour développer des applications web modernes." />
+        <title>Vin aprann itilize AI pou w devlope aplikasyon web ak aplikasyon mobil | Konekte Group</title>
+        <meta name="description" content="Seminè entansif 3 jou an liy. Fòme ou ak zouti IA pou devlope aplikasyon entènèt modèn." />
       </Helmet>
       
       <div className="min-h-screen">

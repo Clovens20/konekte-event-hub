@@ -42,13 +42,13 @@ export const BenefitsSection = () => {
         <div className="text-center mb-12 sm:mb-16">
           <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 sm:py-2 bg-primary/10 rounded-full text-primary text-xs sm:text-sm font-medium mb-3 sm:mb-4">
             <Gift className="w-3 h-3 sm:w-4 sm:h-4" />
-            Avantages exclusifs
+            Avantaj eksklizif
           </div>
           <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4 px-2">
-            Ce que vous <span className="text-gradient">recevez</span>
+            Sa w <span className="text-gradient">resevwa</span>
           </h2>
           <p className="text-muted-foreground text-base sm:text-lg max-w-2xl mx-auto px-2">
-            Bien plus qu'une simple formation, un investissement pour votre avenir
+            Pi plis pase yon fòmasyon senp, yon envestisman pou lavni w
           </p>
         </div>
 

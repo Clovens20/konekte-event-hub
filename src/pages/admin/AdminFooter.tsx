@@ -46,10 +46,10 @@ const AdminFooter = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['footer-config'] });
-      toast({ title: 'Succès', description: 'Configuration du footer mise à jour.' });
+      toast({ title: 'Siksè', description: 'Konfigirasyon pye paj la mete ajou.' });
     },
     onError: (error) => {
-      toast({ title: 'Erreur', description: error.message, variant: 'destructive' });
+      toast({ title: 'Erè', description: error.message, variant: 'destructive' });
     },
   });
 
@@ -62,23 +62,23 @@ const AdminFooter = () => {
 
   return (
     <div className="space-y-6">
-      <div><h1 className="text-3xl font-bold">Configuration Footer</h1></div>
+      <div><h1 className="text-3xl font-bold">Konfigirasyon Pye paj</h1></div>
       <Card>
-        <CardHeader><CardTitle>Informations de contact</CardTitle></CardHeader>
+        <CardHeader><CardTitle>Enfòmasyon kontak</CardTitle></CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
-                <Label>Email</Label>
+                <Label>Imèl</Label>
                 <Input value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} />
               </div>
               <div className="space-y-2">
-                <Label>Téléphone</Label>
+                <Label>Telefòn</Label>
                 <Input value={formData.telephone} onChange={(e) => setFormData({ ...formData, telephone: e.target.value })} />
               </div>
             </div>
             <div className="space-y-2">
-              <Label>Adresse</Label>
+              <Label>Adrès</Label>
               <Input value={formData.adresse} onChange={(e) => setFormData({ ...formData, adresse: e.target.value })} />
             </div>
             <div className="grid gap-4 md:grid-cols-3">
@@ -101,7 +101,7 @@ const AdminFooter = () => {
             </div>
             <Button type="submit" disabled={updateMutation.isPending}>
               {updateMutation.isPending ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <Save className="mr-2 h-4 w-4" />}
-              Enregistrer
+              Anrejistre
             </Button>
           </form>
         </CardContent>

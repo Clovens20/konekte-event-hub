@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useFooterConfig } from '@/hooks/useSeminarData';
-import { Mail, Phone, MapPin, Facebook, Instagram, Linkedin, Sparkles } from 'lucide-react';
+import { Mail, Phone, MapPin, Sparkles } from 'lucide-react';
 
 // Composant pour afficher un logo avec fallback et support de plusieurs formats
 const LogoImage = ({ baseName, alt, fallbackText }: { baseName: string; alt: string; fallbackText: string }) => {
@@ -65,7 +65,7 @@ const LogoImage = ({ baseName, alt, fallbackText }: { baseName: string; alt: str
         className={`h-12 md:h-16 max-w-[200px] w-auto object-contain ${shouldInvert ? 'filter brightness-0 invert' : ''} hover:opacity-80 transition-opacity ${isLoading ? 'opacity-0' : 'opacity-100'}`}
         onError={(e) => {
           const target = e.target as HTMLImageElement;
-          console.error(`❌ Logo non trouvé: ${sources[currentSrc]}`, {
+          console.error(`❌ Logo pa jwenn: ${sources[currentSrc]}`, {
             currentSrc,
             allSources: sources,
             baseName,
@@ -76,7 +76,7 @@ const LogoImage = ({ baseName, alt, fallbackText }: { baseName: string; alt: str
         }}
         onLoad={(e) => {
           const target = e.target as HTMLImageElement;
-          console.log(`✅ Logo chargé: ${sources[currentSrc]}`, {
+          console.log(`✅ Logo chaje: ${sources[currentSrc]}`, {
             naturalWidth: target.naturalWidth,
             naturalHeight: target.naturalHeight,
             complete: target.complete,
@@ -107,66 +107,29 @@ export const Footer = () => {
               <span className="text-xl font-bold">Konekte Group</span>
             </div>
             <p className="text-background/70 mb-6 max-w-md">
-              Nous formons la prochaine génération de développeurs haïtiens aux technologies de pointe.
+              Nou ap fòme pwochen jenerasyon devlopè ayisyen ak teknoloji avanse.
             </p>
-            
-            {/* Social Links - CORRECTION: Vérification que les URLs ne sont pas vides */}
-            <div className="flex items-center gap-4">
-              {footerConfig?.facebook && footerConfig.facebook.trim() && (
-                <a 
-                  href={footerConfig.facebook} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 bg-background/10 rounded-xl flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors"
-                  aria-label="Facebook"
-                >
-                  <Facebook className="w-5 h-5" />
-                </a>
-              )}
-              {footerConfig?.instagram && footerConfig.instagram.trim() && (
-                <a 
-                  href={footerConfig.instagram} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 bg-background/10 rounded-xl flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors"
-                  aria-label="Instagram"
-                >
-                  <Instagram className="w-5 h-5" />
-                </a>
-              )}
-              {footerConfig?.linkedin && footerConfig.linkedin.trim() && (
-                <a 
-                  href={footerConfig.linkedin} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="w-10 h-10 bg-background/10 rounded-xl flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors"
-                  aria-label="LinkedIn"
-                >
-                  <Linkedin className="w-5 h-5" />
-                </a>
-              )}
-            </div>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h4 className="font-bold mb-4">Liens rapides</h4>
+            <h4 className="font-bold mb-4">Lyen rapid</h4>
             <nav className="space-y-3">
               <a href="#accueil" className="block text-background/70 hover:text-background transition-colors">
-                Accueil
+                Akèy
               </a>
               <a href="#programme" className="block text-background/70 hover:text-background transition-colors">
-                Programme
+                Pwogram
               </a>
               <a href="#contact" className="block text-background/70 hover:text-background transition-colors">
-                Contact
+                Kontak
               </a>
             </nav>
           </div>
 
           {/* Contact */}
           <div>
-            <h4 className="font-bold mb-4">Contact</h4>
+            <h4 className="font-bold mb-4">Kontak</h4>
             <div className="space-y-3">
               {footerConfig?.email && footerConfig.email.trim() && (
                 <div className="flex items-center gap-3 text-background/70">
@@ -195,7 +158,7 @@ export const Footer = () => {
           <div className="flex flex-col items-center gap-6 sm:gap-8">
             {/* Organisé par */}
             <div className="text-center">
-              <p className="text-background/70 text-xs sm:text-sm mb-3 sm:mb-4 font-medium uppercase tracking-wider">Organisé par</p>
+              <p className="text-background/70 text-xs sm:text-sm mb-3 sm:mb-4 font-medium uppercase tracking-wider">Òganize pa</p>
               <div className="flex flex-col items-center justify-center gap-3 sm:gap-4">
                 {/* Logo GGTC */}
                 <div className="flex items-center justify-center min-h-[60px] px-2 sm:px-4 relative">
@@ -215,7 +178,7 @@ export const Footer = () => {
             {/* Financé par */}
             <div className="text-center w-full">
               <p className="text-background/70 text-xs sm:text-sm mb-4 sm:mb-6 font-medium uppercase tracking-wider">
-                Financé par: <span className="normal-case">InnovaPort</span> et <span className="normal-case">Konekte Group</span>
+                Finanse pa: <span className="normal-case">InnovaPort</span> ak <span className="normal-case">Konekte Group</span>
               </p>
               <div className="flex items-center justify-center gap-4 sm:gap-6 md:gap-8 lg:gap-12 flex-wrap px-4">
                 {/* Logo InnovaPort */}
@@ -243,7 +206,7 @@ export const Footer = () => {
         {/* Copyright */}
         <div className="border-t border-background/10 pt-8 text-center">
           <p className="text-background/50 text-sm">
-            {footerConfig?.copyright || '© 2025 Konekte Group. Tous droits réservés.'}
+            {footerConfig?.copyright || '© 2025 Konekte Group. Tout dwa rezève.'}
           </p>
         </div>
       </div>

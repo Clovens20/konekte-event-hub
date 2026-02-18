@@ -24,30 +24,44 @@ export const useAuth = () => {
 
   useEffect(() => {
     let mounted = true;
+    const LOAD_TIMEOUT_MS = 8000;
+
+    const setLoaded = (user: User | null, session: Session | null, isAdmin: boolean) => {
+      if (!mounted) return;
+      setAuthState({
+        user: user ?? null,
+        session: session ?? null,
+        isLoading: false,
+        isAdmin,
+      });
+    };
+
+    // Timeout de sécurité : ne jamais rester en chargement indéfiniment
+    const timeoutId = setTimeout(() => {
+      if (!mounted) return;
+      setAuthState((prev) => {
+        if (prev.isLoading) {
+          return { user: null, session: null, isLoading: false, isAdmin: false };
+        }
+        return prev;
+      });
+    }, LOAD_TIMEOUT_MS);
 
     // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      if (!mounted) return;
-      
-      if (session?.user) {
-        checkAdminRole(session.user.id).then((isAdmin) => {
-          if (!mounted) return;
-          setAuthState({
-            user: session.user,
-            session,
-            isLoading: false,
-            isAdmin,
-          });
-        });
-      } else {
-        setAuthState({
-          user: null,
-          session: null,
-          isLoading: false,
-          isAdmin: false,
-        });
-      }
-    });
+    supabase.auth.getSession()
+      .then(({ data: { session } }) => {
+        if (!mounted) return;
+        if (session?.user) {
+          checkAdminRole(session.user.id)
+            .then((isAdmin) => setLoaded(session.user, session, isAdmin))
+            .catch(() => setLoaded(session.user, session, false));
+        } else {
+          setLoaded(null, null, false);
+        }
+      })
+      .catch(() => {
+        if (mounted) setLoaded(null, null, false);
+      });
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
@@ -80,6 +94,7 @@ export const useAuth = () => {
 
     return () => {
       mounted = false;
+      clearTimeout(timeoutId);
       subscription.unsubscribe();
     };
   }, []);
@@ -102,24 +117,31 @@ export const useAuth = () => {
     }
 
     isCheckingRef.current = true;
+    const RPC_TIMEOUT_MS = 6000;
+    const rpcPromise = supabase.rpc('has_role', {
+      _user_id: userId,
+      _role: 'admin',
+    });
+    const timeoutPromise = new Promise<{ data: null; error: { message: string } }>((_, reject) =>
+      setTimeout(() => reject(new Error('timeout')), RPC_TIMEOUT_MS)
+    );
     try {
-      const { data, error } = await supabase.rpc('has_role', {
-        _user_id: userId,
-        _role: 'admin',
-      });
+      const { data, error } = await Promise.race([rpcPromise, timeoutPromise]);
       if (error) {
         console.error('Error checking admin role:', error);
         isCheckingRef.current = false;
         return false;
       }
       const isAdmin = data === true;
-      
-      // Mettre en cache le résultat
       adminRoleCache.set(userId, { isAdmin, timestamp: Date.now() });
       isCheckingRef.current = false;
       return isAdmin;
     } catch (error) {
-      console.error('Error checking admin role:', error);
+      if (String(error).includes('timeout')) {
+        console.warn('has_role RPC timeout - vérifiez VITE_SUPABASE_URL et la connexion.');
+      } else {
+        console.error('Error checking admin role:', error);
+      }
       isCheckingRef.current = false;
       return false;
     }

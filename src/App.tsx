@@ -22,6 +22,8 @@ const AdminInscriptions = lazy(() => import("./pages/admin/AdminInscriptions"));
 const AdminFooter = lazy(() => import("./pages/admin/AdminFooter"));
 const AdminFiles = lazy(() => import("./pages/admin/AdminFiles"));
 const AdminLogos = lazy(() => import("./pages/admin/AdminLogos"));
+const AdminFormation = lazy(() => import("./pages/admin/AdminFormation"));
+const AdminFormTexts = lazy(() => import("./pages/admin/AdminFormTexts"));
 
 // Loading fallback component
 const AdminPageLoader = () => (
@@ -33,21 +35,12 @@ const AdminPageLoader = () => (
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: (failureCount, error) => {
-        // Retry jusqu'à 3 fois pour les erreurs réseau
-        if (failureCount < 3) {
-          const errorMessage = error instanceof Error ? error.message : String(error);
-          if (errorMessage.includes('network') || errorMessage.includes('fetch')) {
-            return true;
-          }
-        }
-        return false;
-      },
-      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
-      staleTime: 5 * 60 * 1000, // 5 minutes
-      gcTime: 10 * 60 * 1000, // Garde en cache 10 minutes (anciennement cacheTime)
+      retry: 2,
+      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 15000),
+      staleTime: 0,                 // ← corrigé : était 5 min, bloquait les fetches
+      gcTime: 10 * 60 * 1000,
       refetchOnWindowFocus: false,
-      refetchOnMount: false, // Ne pas refetch automatiquement à chaque montage
+      refetchOnMount: true,         // ← corrigé : était false, empêchait le chargement initial
     },
     mutations: {
       retry: 1,
@@ -99,6 +92,22 @@ const App = () => (
               element={
                 <Suspense fallback={<AdminPageLoader />}>
                   <AdminProgram />
+                </Suspense>
+              } 
+            />
+            <Route 
+              path="formation" 
+              element={
+                <Suspense fallback={<AdminPageLoader />}>
+                  <AdminFormation />
+                </Suspense>
+              } 
+            />
+            <Route 
+              path="form-texts" 
+              element={
+                <Suspense fallback={<AdminPageLoader />}>
+                  <AdminFormTexts />
                 </Suspense>
               } 
             />

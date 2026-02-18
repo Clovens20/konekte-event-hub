@@ -3,6 +3,8 @@ import {
   LayoutDashboard, 
   Calendar, 
   BookOpen, 
+  Layers,
+  FileText,
   Star, 
   Ticket, 
   Users, 
@@ -17,15 +19,17 @@ import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 const navItems = [
-  { to: '/admin', icon: LayoutDashboard, label: 'Dashboard', end: true },
-  { to: '/admin/seminar', icon: Calendar, label: 'Séminaire', end: false },
-  { to: '/admin/program', icon: BookOpen, label: 'Programme', end: false },
-  { to: '/admin/benefits', icon: Star, label: 'Avantages', end: false },
-  { to: '/admin/promo-codes', icon: Ticket, label: 'Codes Promo', end: false },
-  { to: '/admin/inscriptions', icon: Users, label: 'Inscriptions', end: false },
-  { to: '/admin/footer', icon: Settings, label: 'Footer', end: false },
-  { to: '/admin/files', icon: FileCode, label: 'Fichiers', end: false },
-  { to: '/admin/logos', icon: Image, label: 'Logos', end: false },
+  { to: '/admin', icon: LayoutDashboard, label: 'Tablo bò', end: true },
+  { to: '/admin/seminar', icon: Calendar, label: 'Seminè', end: false },
+  { to: '/admin/program', icon: BookOpen, label: 'Pwogram', end: false },
+  { to: '/admin/formation', icon: Layers, label: 'Modil Fòmasyon', end: false },
+  { to: '/admin/form-texts', icon: FileText, label: 'Tèks Fòmilè', end: false },
+  { to: '/admin/benefits', icon: Star, label: 'Avantaj', end: false },
+  { to: '/admin/promo-codes', icon: Ticket, label: 'Kòd Promosyon', end: false },
+  { to: '/admin/inscriptions', icon: Users, label: 'Enskripsyon', end: false },
+  { to: '/admin/footer', icon: Settings, label: 'Pye paj', end: false },
+  { to: '/admin/files', icon: FileCode, label: 'Fichye', end: false },
+  { to: '/admin/logos', icon: Image, label: 'Logo', end: false },
 ];
 
 export const AdminSidebar = () => {
@@ -47,7 +51,7 @@ export const AdminSidebar = () => {
           </div>
           <div>
             <h1 className="font-bold text-lg">Admin</h1>
-            <p className="text-xs text-muted-foreground">Gestion du séminaire</p>
+            <p className="text-xs text-muted-foreground">Jesyon seminè a</p>
           </div>
         </div>
       </div>
@@ -81,7 +85,7 @@ export const AdminSidebar = () => {
       <div className="p-4 border-t border-border">
         <div className="mb-3 px-4">
           <p className="text-sm font-medium truncate">{user?.email}</p>
-          <p className="text-xs text-muted-foreground">Administrateur</p>
+          <p className="text-xs text-muted-foreground">Administratè</p>
         </div>
         <Button
           variant="outline"
@@ -89,7 +93,7 @@ export const AdminSidebar = () => {
           onClick={handleSignOut}
         >
           <LogOut className="h-4 w-4" />
-          Déconnexion
+          Dekonekte
         </Button>
       </div>
     </aside>

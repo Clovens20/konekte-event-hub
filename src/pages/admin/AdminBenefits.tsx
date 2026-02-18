@@ -72,11 +72,11 @@ const AdminBenefits = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['benefits'] });
       queryClient.refetchQueries({ queryKey: ['benefits'], type: 'active' });
-      toast({ title: 'Succès', description: 'Avantage ajouté avec succès.' });
+      toast({ title: 'Siksè', description: 'Avantaj ajoute avèk siksè.' });
       resetForm();
     },
     onError: (error) => {
-      toast({ title: 'Erreur', description: error.message, variant: 'destructive' });
+      toast({ title: 'Erè', description: error.message, variant: 'destructive' });
     },
   });
 
@@ -88,11 +88,11 @@ const AdminBenefits = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['benefits'] });
       queryClient.refetchQueries({ queryKey: ['benefits'], type: 'active' });
-      toast({ title: 'Succès', description: 'Avantage mis à jour.' });
+      toast({ title: 'Siksè', description: 'Avantaj mete ajou.' });
       resetForm();
     },
     onError: (error) => {
-      toast({ title: 'Erreur', description: error.message, variant: 'destructive' });
+      toast({ title: 'Erè', description: error.message, variant: 'destructive' });
     },
   });
 
@@ -104,10 +104,10 @@ const AdminBenefits = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['benefits'] });
       queryClient.refetchQueries({ queryKey: ['benefits'], type: 'active' });
-      toast({ title: 'Succès', description: 'Avantage supprimé.' });
+      toast({ title: 'Siksè', description: 'Avantaj efase.' });
     },
     onError: (error) => {
-      toast({ title: 'Erreur', description: error.message, variant: 'destructive' });
+      toast({ title: 'Erè', description: error.message, variant: 'destructive' });
     },
   });
 
@@ -138,7 +138,7 @@ const AdminBenefits = () => {
   };
 
   const handleDelete = (id: string) => {
-    if (confirm('Êtes-vous sûr de vouloir supprimer cet avantage ?')) {
+    if (confirm('Ou sèten ou vle efase avantaj sa a ?')) {
       deleteMutation.mutate(id);
     }
   };
@@ -152,8 +152,8 @@ const AdminBenefits = () => {
     return (
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold">Avantages</h1>
-          <p className="text-muted-foreground">Gérez les avantages affichés</p>
+          <h1 className="text-3xl font-bold">Avantaj</h1>
+          <p className="text-muted-foreground">Jere avantaj ki parèt</p>
         </div>
         <Skeleton className="h-[400px]" />
       </div>
@@ -164,24 +164,24 @@ const AdminBenefits = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Avantages</h1>
-          <p className="text-muted-foreground">Gérez les avantages affichés sur la page d'accueil</p>
+          <h1 className="text-3xl font-bold">Avantaj</h1>
+          <p className="text-muted-foreground">Jere avantaj ki parèt sou paj akèy la</p>
         </div>
         <Dialog open={isDialogOpen} onOpenChange={(open) => { setIsDialogOpen(open); if (!open) resetForm(); }}>
           <DialogTrigger asChild>
             <Button>
               <Plus className="mr-2 h-4 w-4" />
-              Ajouter un avantage
+              Ajoute yon avantaj
             </Button>
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>{editingBenefit ? 'Modifier l\'avantage' : 'Ajouter un avantage'}</DialogTitle>
+              <DialogTitle>{editingBenefit ? 'Modifye avantaj la' : 'Ajoute yon avantaj'}</DialogTitle>
             </DialogHeader>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid gap-4 grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="icon">Icône</Label>
+                  <Label htmlFor="icon">Ikòn</Label>
                   <Select value={formData.icon} onValueChange={(value) => setFormData({ ...formData, icon: value })}>
                     <SelectTrigger>
                       <SelectValue />
@@ -199,7 +199,7 @@ const AdminBenefits = () => {
                   </Select>
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="ordre">Ordre</Label>
+                  <Label htmlFor="ordre">Òd</Label>
                   <Input
                     id="ordre"
                     type="number"
@@ -209,7 +209,7 @@ const AdminBenefits = () => {
                 </div>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="titre">Titre</Label>
+                <Label htmlFor="titre">Tit</Label>
                 <Input
                   id="titre"
                   value={formData.titre}
@@ -218,7 +218,7 @@ const AdminBenefits = () => {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
+                <Label htmlFor="description">Deskripsyon</Label>
                 <Textarea
                   id="description"
                   value={formData.description}
@@ -229,13 +229,13 @@ const AdminBenefits = () => {
               </div>
               <div className="flex justify-end gap-2">
                 <Button type="button" variant="outline" onClick={resetForm}>
-                  Annuler
+                  Anile
                 </Button>
                 <Button type="submit" disabled={createMutation.isPending || updateMutation.isPending}>
                   {(createMutation.isPending || updateMutation.isPending) && (
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                   )}
-                  {editingBenefit ? 'Mettre à jour' : 'Ajouter'}
+                  {editingBenefit ? 'Mete ajou' : 'Ajoute'}
                 </Button>
               </div>
             </form>
@@ -245,22 +245,22 @@ const AdminBenefits = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle>Liste des avantages</CardTitle>
+          <CardTitle>Lis avantaj yo</CardTitle>
         </CardHeader>
         <CardContent>
           {benefits?.length === 0 ? (
             <p className="text-muted-foreground text-center py-8">
-              Aucun avantage pour le moment
+              Pa gen avantaj pou kounye a
             </p>
           ) : (
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="w-16">Icône</TableHead>
-                  <TableHead>Titre</TableHead>
-                  <TableHead>Description</TableHead>
-                  <TableHead className="w-20">Ordre</TableHead>
-                  <TableHead className="w-24">Actions</TableHead>
+                  <TableHead className="w-16">Ikòn</TableHead>
+                  <TableHead>Tit</TableHead>
+                  <TableHead>Deskripsyon</TableHead>
+                  <TableHead className="w-20">Òd</TableHead>
+                  <TableHead className="w-24">Aksyon</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>

@@ -99,12 +99,12 @@ const AdminLogos = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['logo-config'] });
-      toast({ title: 'Succès', description: 'Logo créé avec succès.' });
+      toast({ title: 'Siksè', description: 'Logo kreye avèk siksè.' });
       setIsCreating(false);
       setEditingLogo(null);
     },
     onError: (error) => {
-      showError(error, 'Erreur lors de la création');
+      showError(error, 'Erè lè w ap kreye');
     },
   });
 
@@ -126,12 +126,12 @@ const AdminLogos = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['logo-config'] });
-      toast({ title: 'Succès', description: 'Configuration du logo mise à jour.' });
+      toast({ title: 'Siksè', description: 'Konfigirasyon logo a mete ajou.' });
       setEditingLogo(null);
       setIsCreating(false);
     },
     onError: (error) => {
-      showError(error, 'Erreur lors de la mise à jour');
+      showError(error, 'Erè lè w ap mete ajou');
     },
   });
 
@@ -186,7 +186,7 @@ const AdminLogos = () => {
     return (
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold">Gestion des Logos</h1>
+          <h1 className="text-3xl font-bold">Jesyon Logo</h1>
           <p className="text-muted-foreground">Gérez les logos du header et du footer</p>
         </div>
         <Skeleton className="h-[600px]" />
@@ -200,7 +200,7 @@ const AdminLogos = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold">Gestion des Logos</h1>
+        <h1 className="text-3xl font-bold">Jesyon Logo</h1>
         <p className="text-muted-foreground">Gérez les logos affichés dans le header et le footer</p>
       </div>
 
@@ -222,8 +222,8 @@ const AdminLogos = () => {
       {/* Header Logos */}
       <Card>
         <CardHeader>
-          <CardTitle>Logos du Header</CardTitle>
-          <CardDescription>Logo affiché dans la barre de navigation</CardDescription>
+          <CardTitle>Logo Header</CardTitle>
+          <CardDescription>Logo ki parèt nan bar navigasyon an</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
@@ -239,7 +239,7 @@ const AdminLogos = () => {
                     size="sm"
                     onClick={() => setEditingLogo(logo)}
                   >
-                    Modifier
+                    Modifye
                   </Button>
                 </div>
                 {logo.file_name && (
@@ -269,8 +269,8 @@ const AdminLogos = () => {
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>Logos du Footer</CardTitle>
-              <CardDescription>Logos affichés dans la section "Financé par"</CardDescription>
+              <CardTitle>Logo Pye paj</CardTitle>
+              <CardDescription>Logo ki parèt nan seksyon "Finanse pa"</CardDescription>
             </div>
             <Button
               variant="outline"
@@ -278,8 +278,8 @@ const AdminLogos = () => {
               onClick={() => handleCreateNew('footer')}
             >
               <Plus className="mr-2 h-4 w-4" />
-              Ajouter un logo
-            </Button>
+Ajoute yon logo
+              </Button>
           </div>
         </CardHeader>
         <CardContent>
@@ -287,7 +287,7 @@ const AdminLogos = () => {
             {footerLogos.length === 0 ? (
               <div className="text-center py-8 text-muted-foreground">
                 <p>Aucun logo configuré pour le footer.</p>
-                <p className="text-sm mt-2">Cliquez sur "Ajouter un logo" pour en créer un.</p>
+                <p className="text-sm mt-2">Klike sou "Ajoute yon logo" pou kreye yon logo.</p>
               </div>
             ) : (
               footerLogos.map((logo) => (
@@ -305,7 +305,7 @@ const AdminLogos = () => {
                         setIsCreating(false);
                       }}
                     >
-                      Modifier
+                      Modifye
                     </Button>
                   </div>
                   {logo.file_name && (
@@ -336,10 +336,10 @@ const AdminLogos = () => {
         <Card>
           <CardHeader>
             <CardTitle>
-              {isCreating ? 'Ajouter un nouveau logo' : `Modifier le logo: ${getLogoTypeLabel(editingLogo?.logo_type || formData.logo_type)}`}
+              {isCreating ? 'Ajoute yon nouvo logo' : `Modifye logo a: ${getLogoTypeLabel(editingLogo?.logo_type || formData.logo_type)}`}
             </CardTitle>
             <CardDescription>
-              Emplacement: {getLocationLabel(editingLogo?.location || formData.location)}
+              Kote: {getLocationLabel(editingLogo?.location || formData.location)}
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -420,7 +420,7 @@ const AdminLogos = () => {
                   ) : (
                     <>
                       <Save className="mr-2 h-4 w-4" />
-                      {isCreating ? 'Créer' : 'Enregistrer'}
+                      {isCreating ? 'Kreye' : 'Anrejistre'}
                     </>
                   )}
                 </Button>
@@ -432,8 +432,8 @@ const AdminLogos = () => {
                     setIsCreating(false);
                   }}
                 >
-                  Annuler
-                </Button>
+Anile
+                  </Button>
               </div>
             </form>
           </CardContent>

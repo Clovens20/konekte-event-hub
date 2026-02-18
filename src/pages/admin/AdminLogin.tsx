@@ -29,7 +29,7 @@ const AdminLogin = () => {
       await signIn(email, password);
       navigate(from, { replace: true });
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Erreur de connexion');
+      setError(err instanceof Error ? err.message : 'Erè koneksyon');
     } finally {
       setIsLoading(false);
     }
@@ -46,16 +46,16 @@ const AdminLogin = () => {
             </div>
             <div>
               <h1 className="text-2xl font-bold">Admin</h1>
-              <p className="text-sm text-muted-foreground">Panneau d'administration</p>
+              <p className="text-sm text-muted-foreground">Panno administrasyon</p>
             </div>
           </div>
         </div>
 
         <Card>
           <CardHeader className="text-center">
-            <CardTitle>Connexion</CardTitle>
+            <CardTitle>Koneksyon</CardTitle>
             <CardDescription>
-              Connectez-vous pour accéder au panneau d'administration
+              Konekte pou aksede panno administrasyon an
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -68,7 +68,7 @@ const AdminLogin = () => {
               )}
               
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email">Imèl</Label>
                 <Input
                   id="email"
                   type="email"
@@ -81,7 +81,7 @@ const AdminLogin = () => {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="password">Mot de passe</Label>
+                <Label htmlFor="password">Modpas</Label>
                 <Input
                   id="password"
                   type="password"
@@ -97,10 +97,10 @@ const AdminLogin = () => {
                 {isLoading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Connexion...
+                    Ap konekte...
                   </>
                 ) : (
-                  'Se connecter'
+                  'Konekte'
                 )}
               </Button>
             </form>
@@ -109,7 +109,7 @@ const AdminLogin = () => {
 
         <p className="text-center text-sm text-muted-foreground mt-4">
           <a href="/" className="hover:text-primary transition-colors">
-            ← Retour au site
+            ← Tounen sou sit la
           </a>
         </p>
       </div>

@@ -93,7 +93,7 @@ const AdminFiles = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['editable-files'] });
       toast({
-        title: 'Fichier sauvegardé',
+        title: 'Fichye anrejistre',
         description: 'Le fichier a été mis à jour avec succès.',
       });
       // Recharger le fichier sélectionné
@@ -105,7 +105,7 @@ const AdminFiles = () => {
       }
     },
     onError: (error) => {
-      showError(error, 'Erreur lors de la sauvegarde');
+      showError(error, 'Erè lè w ap anrejistre');
     },
   });
 
@@ -124,12 +124,12 @@ const AdminFiles = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['editable-files'] });
       toast({
-        title: 'Fichier créé',
+        title: 'Fichye kreye',
         description: 'Le nouveau fichier a été créé avec succès.',
       });
     },
     onError: (error) => {
-      showError(error, 'Erreur lors de la création');
+      showError(error, 'Erè lè w ap kreye');
     },
   });
 
@@ -193,7 +193,7 @@ const AdminFiles = () => {
     return (
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold">Gestion des Fichiers</h1>
+          <h1 className="text-3xl font-bold">Jesyon Fichye</h1>
           <p className="text-muted-foreground">Modifiez tous les fichiers du projet</p>
         </div>
         <Skeleton className="h-[600px]" />
@@ -205,7 +205,7 @@ const AdminFiles = () => {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold">Gestion des Fichiers</h1>
+          <h1 className="text-3xl font-bold">Jesyon Fichye</h1>
           <p className="text-muted-foreground">
             Modifiez et gérez tous les fichiers du projet depuis l'interface admin
           </p>
@@ -223,7 +223,7 @@ const AdminFiles = () => {
         {/* File List */}
         <Card className="lg:col-span-1">
           <CardHeader>
-            <CardTitle>Liste des Fichiers</CardTitle>
+            <CardTitle>Lis Fichye</CardTitle>
             <CardDescription>
               {filteredFiles.length} fichier(s) trouvé(s)
             </CardDescription>
@@ -234,7 +234,7 @@ const AdminFiles = () => {
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
-                  placeholder="Rechercher un fichier..."
+                  placeholder="Chache yon fichye..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10"

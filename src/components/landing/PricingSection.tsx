@@ -1,4 +1,5 @@
 import { useSeminarInfo, useInscriptionCount } from '@/hooks/useSeminarData';
+import { PLACES_DEFAULT_CAPACITY, LABEL_PLAS_DISPONIB } from '@/lib/constants';
 import { Check, Sparkles, ArrowRight } from 'lucide-react';
 
 interface PricingSectionProps {
@@ -10,7 +11,8 @@ export const PricingSection = ({ onOpenModal }: PricingSectionProps) => {
   const { data: inscriptionCount = 0 } = useInscriptionCount();
 
   const prixBase = seminarInfo?.prix_base || 5000;
-  const placesRestantes = (seminarInfo?.nombre_places_total || 100) - inscriptionCount;
+  // Toujours 250 comme capacité affichée ; diminue avec chaque inscription
+  const placesRestantes = PLACES_DEFAULT_CAPACITY - inscriptionCount;
 
   const formatPrice = (price: number) => {
     return new Intl.NumberFormat('fr-HT').format(price);
@@ -18,18 +20,18 @@ export const PricingSection = ({ onOpenModal }: PricingSectionProps) => {
 
   // Récupérer les features depuis la base de données ou utiliser les valeurs par défaut
   const features = (seminarInfo?.pricing_features as string[]) || [
-    '3 jours de formation intensive',
-    'Certificat officiel Konekte Group',
-    'Matériel pédagogique complet',
-    'Accès à la communauté exclusive',
-    '3 mois de support post-formation',
-    'Projets pratiques guidés',
+    '3 jou fòmasyon entansif',
+    'Sètifika ofisyèl Konekte Group',
+    'Materyèl pedagojik konplè',
+    'Aksè nan kominote eksklizif la',
+    '3 mwa sipò apre fòmasyon',
+    'Pwojè pratik gide',
   ];
 
-  const pricingBadge = seminarInfo?.pricing_badge_text || 'Tarif spécial lancement';
-  const pricingTitle = seminarInfo?.pricing_title || 'Investissez dans votre avenir';
-  const pricingSubtitle = seminarInfo?.pricing_subtitle || 'Un investissement unique pour des compétences qui vous accompagneront toute votre carrière';
-  const pricingPromoNotice = seminarInfo?.pricing_promo_notice || 'Codes promo disponibles lors de l\'inscription';
+  const pricingBadge = seminarInfo?.pricing_badge_text || 'Pri espesyal lansman';
+  const pricingTitle = seminarInfo?.pricing_title || 'Envesti nan lavni w';
+  const pricingSubtitle = seminarInfo?.pricing_subtitle || 'Yon envestisman inik pou konpetans ki ap akonpaye w tout karyè w';
+  const pricingPromoNotice = seminarInfo?.pricing_promo_notice || 'Kòd promosyon disponib lè w ap enskri';
 
   return (
     <section className="py-20 md:py-32 bg-gradient-dark relative overflow-hidden">
@@ -66,7 +68,7 @@ export const PricingSection = ({ onOpenModal }: PricingSectionProps) => {
             <div className="relative z-10">
               {/* Price */}
               <div className="text-center mb-6 sm:mb-8">
-                <div className="text-xs sm:text-sm text-muted-foreground mb-2">Prix du séminaire</div>
+                <div className="text-xs sm:text-sm text-muted-foreground mb-2">Pri seminè a</div>
                 <div className="flex items-end justify-center gap-1">
                   <span className="text-4xl sm:text-5xl md:text-6xl font-bold text-gradient">
                     {formatPrice(prixBase)}
@@ -77,7 +79,7 @@ export const PricingSection = ({ onOpenModal }: PricingSectionProps) => {
 
               {/* Payment Options */}
               <div className="bg-muted/50 rounded-xl sm:rounded-2xl p-3 sm:p-4 mb-6 sm:mb-8">
-                <div className="text-xs sm:text-sm font-medium text-center mb-2 sm:mb-3">Options de paiement flexibles</div>
+                <div className="text-xs sm:text-sm font-medium text-center mb-2 sm:mb-3">Opsyon peman fleksib</div>
                 <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
                   <div className="bg-card rounded-lg sm:rounded-xl p-2 sm:p-3 text-center border border-border">
                     <div className="text-base sm:text-lg font-bold text-primary">25%</div>
@@ -85,7 +87,7 @@ export const PricingSection = ({ onOpenModal }: PricingSectionProps) => {
                   </div>
                   <div className="bg-card rounded-lg sm:rounded-xl p-2 sm:p-3 text-center border-2 border-primary relative">
                     <div className="absolute -top-1.5 sm:-top-2 left-1/2 -translate-x-1/2 bg-primary text-primary-foreground text-[10px] sm:text-xs px-1.5 sm:px-2 py-0.5 rounded-full whitespace-nowrap">
-                      Populaire
+                      Popilè
                     </div>
                     <div className="text-base sm:text-lg font-bold text-primary">50%</div>
                     <div className="text-[10px] sm:text-xs text-muted-foreground break-words">{formatPrice(prixBase * 0.5)} HTG</div>
@@ -123,11 +125,11 @@ export const PricingSection = ({ onOpenModal }: PricingSectionProps) => {
               >
                 {placesRestantes > 0 ? (
                   <>
-                    Réserver ma place maintenant
+                    Rezève kote m kounye a
                     <ArrowRight className="inline-block ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                   </>
                 ) : (
-                  'Complet'
+                  'Konple'
                 )}
               </button>
 
@@ -135,8 +137,8 @@ export const PricingSection = ({ onOpenModal }: PricingSectionProps) => {
               <div className="text-center mt-4">
                 <span className="text-sm text-muted-foreground">
                   {placesRestantes > 0 
-                    ? `⚡ Plus que ${placesRestantes} places disponibles`
-                    : 'Toutes les places ont été réservées'
+                    ? `⚡ ${placesRestantes} ${LABEL_PLAS_DISPONIB}`
+                    : 'Tout kote yo rezève deja'
                   }
                 </span>
               </div>

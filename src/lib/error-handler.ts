@@ -16,7 +16,7 @@ export const handleSupabaseError = (error: PostgrestError | Error | unknown): Ap
     // Erreur réseau ou autre erreur JavaScript
     if (error.message.includes('fetch') || error.message.includes('network')) {
       return {
-        message: 'Erreur de connexion. Vérifiez votre connexion internet.',
+        message: 'Erè koneksyon. Tcheke koneksyon entènèt w.',
         code: 'NETWORK_ERROR',
         retryable: true,
       };
@@ -33,31 +33,31 @@ export const handleSupabaseError = (error: PostgrestError | Error | unknown): Ap
   switch (pgError.code) {
     case 'PGRST116':
       return {
-        message: 'Aucun résultat trouvé.',
+        message: 'Pa jwenn okenn rezilta.',
         code: pgError.code,
         details: pgError.details,
       };
     case '23505':
       return {
-        message: 'Cette entrée existe déjà (doublon).',
+        message: 'Antre sa a egziste deja (doublon).',
         code: pgError.code,
         details: pgError.details,
       };
     case '23503':
       return {
-        message: 'Référence invalide. Vérifiez les données.',
+        message: 'Referans pa valid. Tcheke done yo.',
         code: pgError.code,
         details: pgError.details,
       };
     case '42501':
       return {
-        message: 'Accès non autorisé.',
+        message: 'Aksè pa otorize.',
         code: pgError.code,
         details: pgError.details,
       };
     default:
       return {
-        message: pgError.message || 'Une erreur est survenue.',
+        message: pgError.message || 'Yon erè rive.',
         code: pgError.code,
         details: pgError.details,
         retryable: !pgError.code || pgError.code.startsWith('PGRST'),
@@ -68,7 +68,7 @@ export const handleSupabaseError = (error: PostgrestError | Error | unknown): Ap
 /**
  * Affiche une erreur à l'utilisateur via toast
  */
-export const showError = (error: AppError | Error | unknown, title = 'Erreur') => {
+export const showError = (error: AppError | Error | unknown, title = 'Erè') => {
   const appError = error instanceof Error 
     ? { message: error.message, code: 'UNKNOWN_ERROR' }
     : handleSupabaseError(error);

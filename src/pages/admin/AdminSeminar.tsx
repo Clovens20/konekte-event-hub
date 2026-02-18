@@ -92,13 +92,13 @@ const AdminSeminar = () => {
       // Forcer le refetch immédiat des queries actives
       queryClient.refetchQueries({ queryKey: ['seminar-info'], type: 'active' });
       toast({
-        title: 'Succès',
-        description: 'Les informations du séminaire ont été mises à jour.',
+        title: 'Siksè',
+        description: 'Enfòmasyon seminè a mete ajou.',
       });
     },
     onError: (error) => {
       logError(error, 'UpdateSeminar');
-      showError(error, 'Erreur lors de la mise à jour');
+      showError(error, 'Erè lè w ap mete ajou');
     },
   });
 
@@ -111,8 +111,8 @@ const AdminSeminar = () => {
     return (
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold">Informations du Séminaire</h1>
-          <p className="text-muted-foreground">Gérez les détails du séminaire</p>
+          <h1 className="text-3xl font-bold">Enfòmasyon Seminè a</h1>
+          <p className="text-muted-foreground">Jere detay seminè a</p>
         </div>
         <Skeleton className="h-[600px]" />
       </div>
@@ -123,22 +123,22 @@ const AdminSeminar = () => {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold">Informations du Séminaire</h1>
-        <p className="text-muted-foreground">Gérez les détails du séminaire</p>
+        <h1 className="text-3xl font-bold">Enfòmasyon Seminè a</h1>
+        <p className="text-muted-foreground">Jere detay seminè a</p>
       </div>
 
       <Card>
         <CardHeader>
-          <CardTitle>Détails du séminaire</CardTitle>
+          <CardTitle>Detay seminè a</CardTitle>
           <CardDescription>
-            Modifiez les informations affichées sur la page d'accueil
+            Modifye enfòmasyon ki parèt sou paj akèy la
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="titre">Titre du séminaire</Label>
+                <Label htmlFor="titre">Tit seminè a</Label>
                 <Input
                   id="titre"
                   value={formData.titre}
@@ -148,7 +148,7 @@ const AdminSeminar = () => {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="organisateur">Organisateur</Label>
+                <Label htmlFor="organisateur">Òganizatè</Label>
                 <Input
                   id="organisateur"
                   value={formData.organisateur}
@@ -170,7 +170,7 @@ const AdminSeminar = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="lieu">Lieu</Label>
+              <Label htmlFor="lieu">Kote</Label>
               <Input
                 id="lieu"
                 value={formData.lieu}
@@ -181,7 +181,7 @@ const AdminSeminar = () => {
 
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="date_debut">Date de début</Label>
+                <Label htmlFor="date_debut">Dat kòmansman</Label>
                 <Input
                   id="date_debut"
                   type="date"
@@ -192,7 +192,7 @@ const AdminSeminar = () => {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="date_fin">Date de fin</Label>
+                <Label htmlFor="date_fin">Dat fen</Label>
                 <Input
                   id="date_fin"
                   type="date"
@@ -216,7 +216,7 @@ const AdminSeminar = () => {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="nombre_places_total">Nombre de places</Label>
+                <Label htmlFor="nombre_places_total">Kantite kote</Label>
                 <Input
                   id="nombre_places_total"
                   type="number"
@@ -229,21 +229,21 @@ const AdminSeminar = () => {
 
             {/* Section Tarification */}
             <div className="border-t pt-6 mt-6">
-              <h3 className="text-lg font-semibold mb-4">Section Tarification</h3>
+              <h3 className="text-lg font-semibold mb-4">Seksyon Tarifikasyon</h3>
               
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="pricing_badge_text">Badge (ex: "Tarif spécial lancement")</Label>
+                  <Label htmlFor="pricing_badge_text">Badj (egz: "Pri espesyal lansman")</Label>
                   <Input
                     id="pricing_badge_text"
                     value={formData.pricing_badge_text}
                     onChange={(e) => setFormData({ ...formData, pricing_badge_text: e.target.value })}
-                    placeholder="Tarif spécial lancement"
+                    placeholder="Pri espesyal lansman"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="pricing_title">Titre principal</Label>
+                  <Label htmlFor="pricing_title">Tit prensipal</Label>
                   <Input
                     id="pricing_title"
                     value={formData.pricing_title}
@@ -251,12 +251,12 @@ const AdminSeminar = () => {
                     placeholder="Investissez dans votre avenir"
                   />
                   <p className="text-xs text-muted-foreground">
-                    Le dernier mot sera automatiquement mis en évidence
+                    Dènye mo a ap mete an evidans otomatikman
                   </p>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="pricing_subtitle">Sous-titre</Label>
+                  <Label htmlFor="pricing_subtitle">Sou-tit</Label>
                   <Textarea
                     id="pricing_subtitle"
                     value={formData.pricing_subtitle}
@@ -267,7 +267,7 @@ const AdminSeminar = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label>Avantages inclus (une par ligne)</Label>
+                  <Label>Avantaj enkli (yon pa liy)</Label>
                   <Textarea
                     value={formData.pricing_features.join('\n')}
                     onChange={(e) => {
@@ -278,17 +278,17 @@ const AdminSeminar = () => {
                     placeholder="3 jours de formation intensive&#10;Certificat officiel Konekte Group&#10;Matériel pédagogique complet"
                   />
                   <p className="text-xs text-muted-foreground">
-                    Séparez chaque avantage par une nouvelle ligne
+                    Separe chak avantaj pa yon nouvo liy
                   </p>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="pricing_promo_notice">Notice codes promo</Label>
+                  <Label htmlFor="pricing_promo_notice">Avi kòd promosyon</Label>
                   <Input
                     id="pricing_promo_notice"
                     value={formData.pricing_promo_notice}
                     onChange={(e) => setFormData({ ...formData, pricing_promo_notice: e.target.value })}
-                    placeholder="Codes promo disponibles lors de l'inscription"
+                    placeholder="Kòd promosyon disponib lè w ap enskri"
                   />
                 </div>
               </div>
@@ -296,21 +296,21 @@ const AdminSeminar = () => {
 
             {/* Section Tarification */}
             <div className="border-t pt-6 mt-6">
-              <h3 className="text-lg font-semibold mb-4">Section Tarification</h3>
+              <h3 className="text-lg font-semibold mb-4">Seksyon Tarifikasyon</h3>
               
               <div className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="pricing_badge_text">Badge (ex: "Tarif spécial lancement")</Label>
+                  <Label htmlFor="pricing_badge_text">Badj (egz: "Pri espesyal lansman")</Label>
                   <Input
                     id="pricing_badge_text"
                     value={formData.pricing_badge_text}
                     onChange={(e) => setFormData({ ...formData, pricing_badge_text: e.target.value })}
-                    placeholder="Tarif spécial lancement"
+                    placeholder="Pri espesyal lansman"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="pricing_title">Titre principal</Label>
+                  <Label htmlFor="pricing_title">Tit prensipal</Label>
                   <Input
                     id="pricing_title"
                     value={formData.pricing_title}
@@ -318,12 +318,12 @@ const AdminSeminar = () => {
                     placeholder="Investissez dans votre avenir"
                   />
                   <p className="text-xs text-muted-foreground">
-                    Le dernier mot sera automatiquement mis en évidence
+                    Dènye mo a ap mete an evidans otomatikman
                   </p>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="pricing_subtitle">Sous-titre</Label>
+                  <Label htmlFor="pricing_subtitle">Sou-tit</Label>
                   <Textarea
                     id="pricing_subtitle"
                     value={formData.pricing_subtitle}
@@ -334,7 +334,7 @@ const AdminSeminar = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label>Avantages inclus (une par ligne)</Label>
+                  <Label>Avantaj enkli (yon pa liy)</Label>
                   <Textarea
                     value={formData.pricing_features.join('\n')}
                     onChange={(e) => {
@@ -345,17 +345,17 @@ const AdminSeminar = () => {
                     placeholder="3 jours de formation intensive&#10;Certificat officiel Konekte Group&#10;Matériel pédagogique complet"
                   />
                   <p className="text-xs text-muted-foreground">
-                    Séparez chaque avantage par une nouvelle ligne
+                    Separe chak avantaj pa yon nouvo liy
                   </p>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="pricing_promo_notice">Notice codes promo</Label>
+                  <Label htmlFor="pricing_promo_notice">Avi kòd promosyon</Label>
                   <Input
                     id="pricing_promo_notice"
                     value={formData.pricing_promo_notice}
                     onChange={(e) => setFormData({ ...formData, pricing_promo_notice: e.target.value })}
-                    placeholder="Codes promo disponibles lors de l'inscription"
+                    placeholder="Kòd promosyon disponib lè w ap enskri"
                   />
                 </div>
               </div>
@@ -365,12 +365,12 @@ const AdminSeminar = () => {
               {updateMutation.isPending ? (
                 <>
                   <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Enregistrement...
+                  Ap anrejistre...
                 </>
               ) : (
                 <>
                   <Save className="mr-2 h-4 w-4" />
-                  Enregistrer les modifications
+                  Anrejistre chanjman yo
                 </>
               )}
             </Button>

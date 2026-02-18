@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { X, Loader2, CheckCircle, AlertCircle } from 'lucide-react';
-import { useSeminarInfo } from '@/hooks/useSeminarData';
+import { useSeminarInfo, useSiteTexts } from '@/hooks/useSeminarData';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { useQueryClient } from '@tanstack/react-query';
@@ -12,11 +12,39 @@ interface InscriptionModalProps {
   onClose: () => void;
 }
 
+const defaultTexts: Record<string, string> = {
+  form_modal_title: 'Rezève kote m',
+  form_label_name: 'Non konplè *',
+  form_placeholder_name: 'Egz: Jean Baptiste',
+  form_label_email: 'Imèl *',
+  form_placeholder_email: 'imelw@egzamp.com',
+  form_label_phone: 'Telefòn *',
+  form_placeholder_phone: '+509 3712 3456',
+  form_label_level: 'Nivo eksperyans *',
+  form_placeholder_level: 'Chwazi...',
+  form_option_beginner: 'Kòmanse (pa gen eksperyans)',
+  form_option_intermediate: 'Mwayen (kèk nosyon)',
+  form_option_advanced: 'Avanse (eksperyans serye)',
+  form_label_motivation: 'Motivasyon (opsyonèl)',
+  form_placeholder_motivation: 'Pale nou de objektif w...',
+  form_label_payment: 'Opsyon peman *',
+  form_label_promo: 'Kòd promosyon',
+  form_placeholder_promo: 'KONEKTE25',
+  form_btn_apply: 'Aplike',
+  form_label_amount: 'Montan',
+  form_label_discount: 'Rediksyon',
+  form_label_total: 'Total pou peye',
+  form_btn_submit: 'Kontinye pou peye',
+  form_btn_loading: 'Ap trete...',
+};
+
 export const InscriptionModal = ({ isOpen, onClose }: InscriptionModalProps) => {
   const { data: seminarInfo } = useSeminarInfo();
+  const { data: siteTexts } = useSiteTexts();
   const { toast } = useToast();
   const queryClient = useQueryClient();
   const prixBase = seminarInfo?.prix_base || 5000;
+  const t = (key: string) => (siteTexts?.[key]?.trim() || defaultTexts[key] || key);
 
   const [formData, setFormData] = useState({
     nomComplet: '',
@@ -45,8 +73,8 @@ export const InscriptionModal = ({ isOpen, onClose }: InscriptionModalProps) => 
   const validatePromo = async () => {
     if (!formData.codePromo.trim()) {
       toast({ 
-        title: 'Code vide', 
-        description: 'Veuillez entrer un code promo.', 
+        title: 'Kòd vid', 
+        description: 'Tanpri antre yon kòd promosyon.', 
         variant: 'destructive' 
       });
       return;
@@ -64,7 +92,7 @@ export const InscriptionModal = ({ isOpen, onClose }: InscriptionModalProps) => 
 
       if (error) {
         logError(error, 'ValidatePromo');
-        toast({ title: 'Erreur', description: 'Impossible de valider le code promo.', variant: 'destructive' });
+        toast({ title: 'Erè', description: 'Pa kapab valide kòd promosyon an.', variant: 'destructive' });
         setPromoApplied(null);
         return;
       }
@@ -72,8 +100,8 @@ export const InscriptionModal = ({ isOpen, onClose }: InscriptionModalProps) => 
       // CORRECTION: Vérification que validationResult n'est pas null
       if (!validationResult) {
         toast({ 
-          title: 'Erreur', 
-          description: 'Aucune réponse du serveur.', 
+          title: 'Erè', 
+          description: 'Pa gen repons soti nan sèvè a.', 
           variant: 'destructive' 
         });
         setPromoApplied(null);
@@ -82,8 +110,8 @@ export const InscriptionModal = ({ isOpen, onClose }: InscriptionModalProps) => 
 
       if (!validationResult.valid) {
         toast({ 
-          title: 'Code invalide', 
-          description: validationResult.error || 'Ce code promo n\'est pas valide.', 
+          title: 'Kòd pa valid', 
+          description: validationResult.error || 'Kòd promosyon sa a pa valid.', 
           variant: 'destructive' 
         });
         setPromoApplied(null);
@@ -100,12 +128,12 @@ export const InscriptionModal = ({ isOpen, onClose }: InscriptionModalProps) => 
         : `${validationResult.valeur} HTG`;
       
       toast({ 
-        title: 'Code appliqué!', 
-        description: `Réduction de ${discountText} appliquée. Montant final: ${validationResult.final_amount} HTG` 
+        title: 'Kòd aplike!', 
+        description: `Rediksyon ${discountText} aplike. Montan final: ${validationResult.final_amount} HTG` 
       });
     } catch (err) {
       logError(err, 'ValidatePromo');
-      showError(err, 'Erreur de validation');
+      showError(err, 'Erè validasyon');
       setPromoApplied(null);
     } finally {
       setIsValidatingPromo(false);
@@ -117,11 +145,11 @@ export const InscriptionModal = ({ isOpen, onClose }: InscriptionModalProps) => 
     const newErrors: Record<string, string> = {};
     
     if (!formData.nomComplet || formData.nomComplet.trim().length < 3) {
-      newErrors.nomComplet = 'Nom requis (min 3 caractères)';
+      newErrors.nomComplet = 'Non obligatwa (omwen 3 karaktè)';
     }
     
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Email invalide';
+      newErrors.email = 'Imèl pa valid';
     }
     
     // CORRECTION: Validation améliorée du téléphone
@@ -129,11 +157,11 @@ export const InscriptionModal = ({ isOpen, onClose }: InscriptionModalProps) => 
     const isValidHaitianPhone = /^(\+?509)?[234]\d{7}$/.test(cleanedPhone);
     
     if (!isValidHaitianPhone) {
-      newErrors.telephone = 'Numéro haïtien invalide (ex: 3712-3456 ou +509 3712-3456)';
+      newErrors.telephone = 'Nimewo ayisyen pa valid (egz: 3712-3456 oubyen +509 3712-3456)';
     }
     
     if (!formData.niveauExperience) {
-      newErrors.niveauExperience = 'Sélectionnez votre niveau';
+      newErrors.niveauExperience = 'Chwazi nivo w';
     }
     
     setErrors(newErrors);
@@ -149,7 +177,7 @@ export const InscriptionModal = ({ isOpen, onClose }: InscriptionModalProps) => 
       const transactionId = `KONEKTE-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
       const amount = calculatePrice();
       
-      // Étape 1: Enregistrer l'inscription en "En attente"
+      // Étape 1: Enregistrer l'inscription en "En attente" — va pase "Confirmé" otomatikman apre peman (webhook Bazik)
       const { error: insertError } = await supabase.from('inscriptions').insert({
         nom_complet: formData.nomComplet,
         email: formData.email,
@@ -184,8 +212,8 @@ export const InscriptionModal = ({ isOpen, onClose }: InscriptionModalProps) => 
 
       if (!paymentResult.success || !paymentResult.paymentUrl) {
         toast({ 
-          title: 'Erreur de paiement', 
-          description: paymentResult.message || 'Impossible de créer le paiement. Votre inscription est en attente.',
+          title: 'Erè peman', 
+          description: paymentResult.message || 'Pa kapab kreye peman an. Enskripsyon w ap tann.',
           variant: 'destructive'
         });
         queryClient.invalidateQueries({ queryKey: ['inscription-count'] });
@@ -212,7 +240,7 @@ export const InscriptionModal = ({ isOpen, onClose }: InscriptionModalProps) => 
       // Le callback Bazik.io gérera la mise à jour du statut
     } catch (err) {
       logError(err, 'SubmitInscription');
-      showError(err, 'Erreur d\'inscription');
+      showError(err, 'Erè enskripsyon');
     } finally {
       setIsSubmitting(false);
     }
@@ -224,19 +252,19 @@ export const InscriptionModal = ({ isOpen, onClose }: InscriptionModalProps) => 
     <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-foreground/50 backdrop-blur-sm animate-fade-in">
       <div className="bg-card rounded-2xl sm:rounded-3xl w-full max-w-xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto shadow-2xl animate-scale-in">
         <div className="sticky top-0 bg-card border-b border-border p-4 sm:p-6 flex items-center justify-between rounded-t-2xl sm:rounded-t-3xl z-10">
-          <h2 className="text-xl sm:text-2xl font-bold">Réserver ma place</h2>
-          <button onClick={onClose} className="p-2 hover:bg-muted rounded-xl transition-colors" aria-label="Fermer">
+          <h2 className="text-xl sm:text-2xl font-bold">{t('form_modal_title')}</h2>
+          <button onClick={onClose} className="p-2 hover:bg-muted rounded-xl transition-colors" aria-label="Fèmen">
             <X className="w-5 h-5" />
           </button>
         </div>
 
         <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4 sm:space-y-5">
           <div>
-            <label className="block text-sm font-medium mb-2">Nom complet *</label>
+            <label className="block text-sm font-medium mb-2">{t('form_label_name')}</label>
             <input 
               type="text" 
               className={`input-styled ${errors.nomComplet ? 'border-destructive' : ''}`} 
-              placeholder="Ex: Jean Baptiste" 
+              placeholder={t('form_placeholder_name')} 
               value={formData.nomComplet} 
               onChange={(e) => setFormData({ ...formData, nomComplet: e.target.value })} 
             />
@@ -244,11 +272,11 @@ export const InscriptionModal = ({ isOpen, onClose }: InscriptionModalProps) => 
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2">Email *</label>
+            <label className="block text-sm font-medium mb-2">{t('form_label_email')}</label>
             <input 
               type="email" 
               className={`input-styled ${errors.email ? 'border-destructive' : ''}`} 
-              placeholder="votreemail@exemple.com" 
+              placeholder={t('form_placeholder_email')} 
               value={formData.email} 
               onChange={(e) => setFormData({ ...formData, email: e.target.value })} 
             />
@@ -256,11 +284,11 @@ export const InscriptionModal = ({ isOpen, onClose }: InscriptionModalProps) => 
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2">Téléphone *</label>
+            <label className="block text-sm font-medium mb-2">{t('form_label_phone')}</label>
             <input 
               type="tel" 
               className={`input-styled ${errors.telephone ? 'border-destructive' : ''}`} 
-              placeholder="+509 3712 3456" 
+              placeholder={t('form_placeholder_phone')} 
               value={formData.telephone} 
               onChange={(e) => setFormData({ ...formData, telephone: e.target.value })} 
             />
@@ -268,26 +296,26 @@ export const InscriptionModal = ({ isOpen, onClose }: InscriptionModalProps) => 
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2">Niveau d'expérience *</label>
+            <label className="block text-sm font-medium mb-2">{t('form_label_level')}</label>
             <select 
               className={`input-styled ${errors.niveauExperience ? 'border-destructive' : ''}`} 
               value={formData.niveauExperience} 
               onChange={(e) => setFormData({ ...formData, niveauExperience: e.target.value as any })}
             >
-              <option value="">Sélectionnez...</option>
-              <option value="Débutant">Débutant (aucune expérience)</option>
-              <option value="Intermédiaire">Intermédiaire (quelques notions)</option>
-              <option value="Avancé">Avancé (expérience significative)</option>
+              <option value="">{t('form_placeholder_level')}</option>
+              <option value="Débutant">{t('form_option_beginner')}</option>
+              <option value="Intermédiaire">{t('form_option_intermediate')}</option>
+              <option value="Avancé">{t('form_option_advanced')}</option>
             </select>
             {errors.niveauExperience && <p className="text-destructive text-sm mt-1">{errors.niveauExperience}</p>}
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2">Motivation (optionnel)</label>
+            <label className="block text-sm font-medium mb-2">{t('form_label_motivation')}</label>
             <textarea 
               className="input-styled" 
               rows={3} 
-              placeholder="Parlez-nous de vos objectifs..." 
+              placeholder={t('form_placeholder_motivation')} 
               value={formData.motivation} 
               onChange={(e) => setFormData({ ...formData, motivation: e.target.value })} 
               maxLength={500} 
@@ -295,7 +323,7 @@ export const InscriptionModal = ({ isOpen, onClose }: InscriptionModalProps) => 
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2">Option de paiement *</label>
+            <label className="block text-sm font-medium mb-2">{t('form_label_payment')}</label>
             <div className="grid grid-cols-3 gap-2 sm:gap-3">
               {(['25', '50', '100'] as const).map((pct) => (
                 <button 
@@ -316,12 +344,12 @@ export const InscriptionModal = ({ isOpen, onClose }: InscriptionModalProps) => 
           </div>
 
           <div>
-            <label className="block text-sm font-medium mb-2">Code promo</label>
+            <label className="block text-sm font-medium mb-2">{t('form_label_promo')}</label>
             <div className="flex gap-2">
               <input 
                 type="text" 
                 className="input-styled flex-1" 
-                placeholder="KONEKTE25" 
+                placeholder={t('form_placeholder_promo')} 
                 value={formData.codePromo} 
                 onChange={(e) => setFormData({ ...formData, codePromo: e.target.value.toUpperCase() })} 
               />
@@ -331,29 +359,29 @@ export const InscriptionModal = ({ isOpen, onClose }: InscriptionModalProps) => 
                 disabled={isValidatingPromo || !formData.codePromo} 
                 className="btn-secondary px-4"
               >
-                {isValidatingPromo ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Appliquer'}
+                {isValidatingPromo ? <Loader2 className="w-4 h-4 animate-spin" /> : t('form_btn_apply')}
               </button>
             </div>
             {promoApplied && (
               <p className="text-success text-sm mt-2 flex items-center gap-1">
-                <CheckCircle className="w-4 h-4" /> Code {promoApplied.code} appliqué!
+                <CheckCircle className="w-4 h-4" /> Kòd {promoApplied.code} aplike!
               </p>
             )}
           </div>
 
           <div className="bg-muted/50 rounded-2xl p-4">
             <div className="flex justify-between mb-2">
-              <span className="text-muted-foreground">Montant</span>
+              <span className="text-muted-foreground">{t('form_label_amount')}</span>
               <span>{new Intl.NumberFormat('fr-HT').format(prixBase * parseInt(formData.pourcentagePaye) / 100)} HTG</span>
             </div>
             {promoApplied && (
               <div className="flex justify-between mb-2 text-success">
-                <span>Réduction</span>
+                <span>{t('form_label_discount')}</span>
                 <span>-{new Intl.NumberFormat('fr-HT').format(promoApplied.discount)} HTG</span>
               </div>
             )}
             <div className="flex justify-between font-bold text-lg border-t border-border pt-2 mt-2">
-              <span>Total à payer</span>
+              <span>{t('form_label_total')}</span>
               <span className="text-gradient">{new Intl.NumberFormat('fr-HT').format(calculatePrice())} HTG</span>
             </div>
           </div>
@@ -361,10 +389,10 @@ export const InscriptionModal = ({ isOpen, onClose }: InscriptionModalProps) => 
           <button type="submit" disabled={isSubmitting} className="btn-primary w-full">
             {isSubmitting ? (
               <>
-                <Loader2 className="w-5 h-5 animate-spin mr-2" /> Traitement...
+                <Loader2 className="w-5 h-5 animate-spin mr-2" /> {t('form_btn_loading')}
               </>
             ) : (
-              'Procéder au paiement'
+              t('form_btn_submit')
             )}
           </button>
         </form>
