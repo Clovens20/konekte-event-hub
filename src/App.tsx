@@ -8,6 +8,7 @@ import { Loader2 } from "lucide-react";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import PaymentCallback from "./pages/PaymentCallback";
+import AccesFormation from "./pages/AccesFormation";
 import { AdminLayout } from "./components/admin/AdminLayout";
 import { ProtectedRoute } from "./components/admin/ProtectedRoute";
 
@@ -37,10 +38,10 @@ const queryClient = new QueryClient({
     queries: {
       retry: 2,
       retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 15000),
-      staleTime: 0,                 // ← corrigé : était 5 min, bloquait les fetches
+      staleTime: 0,
       gcTime: 10 * 60 * 1000,
       refetchOnWindowFocus: false,
-      refetchOnMount: true,         // ← corrigé : était false, empêchait le chargement initial
+      refetchOnMount: true,
     },
     mutations: {
       retry: 1,
@@ -62,102 +63,106 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/payment-callback" element={<PaymentCallback />} />
-          <Route 
-            path="/admin/login" 
+
+          {/* ✅ Page de vérification email pour accès au cours */}
+          <Route path="/acces-formation" element={<AccesFormation />} />
+
+          <Route
+            path="/admin/login"
             element={
               <Suspense fallback={<AdminPageLoader />}>
                 <AdminLogin />
               </Suspense>
-            } 
+            }
           />
           <Route path="/admin" element={<ProtectedRoute><AdminLayout /></ProtectedRoute>}>
-            <Route 
-              index 
+            <Route
+              index
               element={
                 <Suspense fallback={<AdminPageLoader />}>
                   <AdminDashboard />
                 </Suspense>
-              } 
+              }
             />
-            <Route 
-              path="seminar" 
+            <Route
+              path="seminar"
               element={
                 <Suspense fallback={<AdminPageLoader />}>
                   <AdminSeminar />
                 </Suspense>
-              } 
+              }
             />
-            <Route 
-              path="program" 
+            <Route
+              path="program"
               element={
                 <Suspense fallback={<AdminPageLoader />}>
                   <AdminProgram />
                 </Suspense>
-              } 
+              }
             />
-            <Route 
-              path="formation" 
+            <Route
+              path="formation"
               element={
                 <Suspense fallback={<AdminPageLoader />}>
                   <AdminFormation />
                 </Suspense>
-              } 
+              }
             />
-            <Route 
-              path="form-texts" 
+            <Route
+              path="form-texts"
               element={
                 <Suspense fallback={<AdminPageLoader />}>
                   <AdminFormTexts />
                 </Suspense>
-              } 
+              }
             />
-            <Route 
-              path="benefits" 
+            <Route
+              path="benefits"
               element={
                 <Suspense fallback={<AdminPageLoader />}>
                   <AdminBenefits />
                 </Suspense>
-              } 
+              }
             />
-            <Route 
-              path="promo-codes" 
+            <Route
+              path="promo-codes"
               element={
                 <Suspense fallback={<AdminPageLoader />}>
                   <AdminPromoCodes />
                 </Suspense>
-              } 
+              }
             />
-            <Route 
-              path="inscriptions" 
+            <Route
+              path="inscriptions"
               element={
                 <Suspense fallback={<AdminPageLoader />}>
                   <AdminInscriptions />
                 </Suspense>
-              } 
+              }
             />
-            <Route 
-              path="footer" 
+            <Route
+              path="footer"
               element={
                 <Suspense fallback={<AdminPageLoader />}>
                   <AdminFooter />
                 </Suspense>
-              } 
+              }
             />
-            <Route 
-              path="files" 
+            <Route
+              path="files"
               element={
                 <Suspense fallback={<AdminPageLoader />}>
                   <AdminFiles />
                 </Suspense>
-              } 
+              }
             />
-            <Route 
-              path="logos" 
+            <Route
+              path="logos"
               element={
                 <Suspense fallback={<AdminPageLoader />}>
                   <AdminLogos />
                 </Suspense>
-              } 
+              }
             />
           </Route>
           <Route path="*" element={<NotFound />} />

@@ -118,9 +118,18 @@ export const createBazikPayment = async (
 /**
  * Vérifie le statut d'un paiement Bazik.io
  */
+export interface VerifyBazikPaymentResult {
+  success: boolean;
+  payment_status?: string;
+  message: string;
+  /** true si paiement 100% → accès formation immédiat */
+  full_access?: boolean;
+  pourcentage_paye?: string | null;
+}
+
 export const verifyBazikPayment = async (
   transactionId: string
-): Promise<{ success: boolean; payment_status?: string; message: string }> => {
+): Promise<VerifyBazikPaymentResult> => {
   try {
     const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
     const supabaseKey = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;

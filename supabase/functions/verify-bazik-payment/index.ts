@@ -191,23 +191,36 @@ serve(async (req) => {
       paymentData: JSON.stringify(paymentData).substring(0, 800)
     });
 
-    // Si le paiement est confirmé, mettre à jour la base de données
+    let pourcentagePaye = null;
+    let fullAccess = false;
+
     if (isCompleted && SUPABASE_URL && SUPABASE_SERVICE_KEY) {
       const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_KEY);
-      
-      console.log(`Updating inscription ${transaction_id} to Confirmed status`);
-      
-      const { data, error } = await supabase
-        .from('inscriptions')
-        .update({ statut: 'Confirmé' })
-        .eq('transaction_id', transaction_id)
-        .select();
 
-      if (error) {
-        console.error('Error updating inscription:', error);
-        // Ne pas échouer la vérification si la mise à jour échoue
+      const { data: inscription, error: fetchErr } = await supabase
+        .from('inscriptions')
+        .select('id, pourcentage_paye, statut')
+        .eq('transaction_id', transaction_id)
+        .maybeSingle();
+
+      if (!fetchErr && inscription) {
+        pourcentagePaye = inscription.pourcentage_paye || null;
+        fullAccess = pourcentagePaye === '100';
+        if (fullAccess) {
+          const { error: updateError } = await supabase
+            .from('inscriptions')
+            .update({ statut: 'Confirmé' })
+            .eq('transaction_id', transaction_id);
+          if (updateError) {
+            console.error('Error updating inscription to Confirmed:', updateError);
+          } else {
+            console.log(`Inscription ${transaction_id} set to Confirmed (100% paid).`);
+          }
+        } else {
+          console.log(`Inscription ${transaction_id} is partial payment (${pourcentagePaye}%). Access only after full payment.`);
+        }
       } else {
-        console.log(`Inscription ${transaction_id} updated successfully to Confirmed. Updated rows:`, data?.length || 0);
+        if (fetchErr) console.error('Error fetching inscription:', fetchErr);
       }
     } else {
       if (!isCompleted) {
@@ -224,6 +237,8 @@ serve(async (req) => {
         payment_status: isCompleted ? 'COMPLETED' : 'PENDING',
         transaction_id: transaction_id,
         message: isCompleted ? 'Paiement confirmé' : 'Paiement en attente',
+        pourcentage_paye: pourcentagePaye,
+        full_access: fullAccess,
         payment_details: paymentData.payment || paymentData,
       }),
       { 
