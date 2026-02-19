@@ -67,7 +67,7 @@ export const useAuth = () => {
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         if (!mounted) return;
-        
+
         if (session?.user) {
           // Invalider le cache lors d'un changement d'auth
           adminRoleCache.delete(session.user.id);
@@ -80,7 +80,25 @@ export const useAuth = () => {
             isAdmin,
           });
         } else {
-          // Nettoyer le cache lors de la déconnexion
+          // Avant de déconnecter: tenter un rafraîchissement (évite déconnexion si refresh a échoué temporairement)
+          try {
+            const { data: { session: newSession } } = await supabase.auth.refreshSession();
+            if (newSession?.user && mounted) {
+              adminRoleCache.delete(newSession.user.id);
+              const isAdmin = await checkAdminRole(newSession.user.id);
+              if (!mounted) return;
+              setAuthState({
+                user: newSession.user,
+                session: newSession,
+                isLoading: false,
+                isAdmin,
+              });
+              return;
+            }
+          } catch {
+            // refresh a échoué, on déconnecte vraiment
+          }
+          if (!mounted) return;
           adminRoleCache.clear();
           setAuthState({
             user: null,
@@ -92,9 +110,16 @@ export const useAuth = () => {
       }
     );
 
+    // Garder la session vivante : rafraîchir avant expiration du JWT (défaut 1h)
+    const REFRESH_INTERVAL_MS = 25 * 60 * 1000; // 25 minutes
+    const refreshIntervalId = setInterval(() => {
+      supabase.auth.refreshSession().catch(() => {});
+    }, REFRESH_INTERVAL_MS);
+
     return () => {
       mounted = false;
       clearTimeout(timeoutId);
+      clearInterval(refreshIntervalId);
       subscription.unsubscribe();
     };
   }, []);

@@ -81,7 +81,7 @@ export const Header = ({ onOpenModal }: HeaderProps) => {
               {placesRestantes} {LABEL_PLAS_DISPONIB}
             </div>
             <button onClick={onOpenModal} className="btn-primary text-sm py-2.5 px-5">
-              Rezève kote m
+              Rezève plas mwen
             </button>
           </div>
 
@@ -128,7 +128,7 @@ export const Header = ({ onOpenModal }: HeaderProps) => {
                   onClick={() => { onOpenModal(); setIsMenuOpen(false); }} 
                   className="btn-primary w-full text-sm py-2.5"
                 >
-                  Rezève kote m
+                  Rezève plas mwen
                 </button>
               </div>
             </nav>

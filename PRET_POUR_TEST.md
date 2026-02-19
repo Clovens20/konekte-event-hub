@@ -2,7 +2,7 @@
 
 ## Ce qui est déjà en place
 
-- **Landing** : Hero, Programme (modules formation), Avantages, Tarifs, Footer, formulaire d’inscription (Rezève kote m).
+- **Landing** : Hero, Programme (modules formation), Avantages, Tarifs, Footer, formulaire d’inscription (Rezève plas mwen).
 - **Admin** : Connexion, Dashboard, Seminè, Pwogram, Modil Fòmasyon, Tèks Fòmilè, Avantaj, Kòd Promosyon, Enskripsyon, Pye paj, Fichye, Logo.
 - **Inscription** : Formulaire → enregistrement en « En attente » → redirection Bazik → après paiement, webhook ou page retour met l’inscription en « Confirmé ».
 - **Places** : Affichage « 250 plas disponib » qui diminue avec le nombre d’inscriptions (hors Annulé).
@@ -31,8 +31,8 @@ Puis ouvrir **http://localhost:8080**.
 
 ### 3. Tester la landing
 
-- Page d’accueil, sections Programme, Tarifs, bouton « Rezève kote m ».
-- Clic sur « Rezève kote m » → formulaire d’inscription.
+- Page d’accueil, sections Programme, Tarifs, bouton « Rezève plas mwen ».
+- Clic sur « Rezève plas mwen » → formulaire d’inscription.
 - Après envoi du formulaire → redirection vers Bazik (paiement). Sans paiement réel, l’inscription reste en « En attente » ; tu peux la passer en « Confirmé » à la main en base ou attendre le webhook.
 
 ### 4. Tester l’admin

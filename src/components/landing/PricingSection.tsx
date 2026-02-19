@@ -125,7 +125,7 @@ export const PricingSection = ({ onOpenModal }: PricingSectionProps) => {
               >
                 {placesRestantes > 0 ? (
                   <>
-                    Rezève kote m kounye a
+                    Rezève plas mwen kounye a
                     <ArrowRight className="inline-block ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
                   </>
                 ) : (

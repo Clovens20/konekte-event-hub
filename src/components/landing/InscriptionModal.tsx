@@ -7,13 +7,16 @@ import { useQueryClient } from '@tanstack/react-query';
 import { showError, logError } from '@/lib/error-handler';
 import { createBazikPayment } from '@/lib/bazik-utils';
 
+// 👇 Remplace ce lien quand tu as le bon URL final
+const COURSE_URL = 'https://konekte-group.systeme.io/school/course/aprannai/lecture/8826253';
+
 interface InscriptionModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
 const defaultTexts: Record<string, string> = {
-  form_modal_title: 'Rezève kote m',
+  form_modal_title: 'Rezève plas mwen',
   form_label_name: 'Non konplè *',
   form_placeholder_name: 'Egz: Jean Baptiste',
   form_label_email: 'Imèl *',
@@ -60,6 +63,7 @@ export const InscriptionModal = ({ isOpen, onClose }: InscriptionModalProps) => 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isValidatingPromo, setIsValidatingPromo] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isConfirmed, setIsConfirmed] = useState(false);
 
   const calculatePrice = () => {
     const baseAmount = prixBase * (parseInt(formData.pourcentagePaye) / 100);
@@ -69,7 +73,6 @@ export const InscriptionModal = ({ isOpen, onClose }: InscriptionModalProps) => 
     return baseAmount;
   };
 
-  // CORRECTION: Meilleure gestion des erreurs et validation
   const validatePromo = async () => {
     if (!formData.codePromo.trim()) {
       toast({ 
@@ -97,7 +100,6 @@ export const InscriptionModal = ({ isOpen, onClose }: InscriptionModalProps) => 
         return;
       }
 
-      // CORRECTION: Vérification que validationResult n'est pas null
       if (!validationResult) {
         toast({ 
           title: 'Erè', 
@@ -140,7 +142,6 @@ export const InscriptionModal = ({ isOpen, onClose }: InscriptionModalProps) => 
     }
   };
 
-  // CORRECTION: Meilleure validation du téléphone haïtien
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
     
@@ -152,7 +153,6 @@ export const InscriptionModal = ({ isOpen, onClose }: InscriptionModalProps) => 
       newErrors.email = 'Imèl pa valid';
     }
     
-    // CORRECTION: Validation améliorée du téléphone
     const cleanedPhone = formData.telephone.replace(/[\s\-\(\)]/g, '');
     const isValidHaitianPhone = /^(\+?509)?[234]\d{7}$/.test(cleanedPhone);
     
@@ -174,10 +174,51 @@ export const InscriptionModal = ({ isOpen, onClose }: InscriptionModalProps) => 
     setIsSubmitting(true);
 
     try {
-      const transactionId = `KONEKTE-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
       const amount = calculatePrice();
-      
-      // Étape 1: Enregistrer l'inscription en "En attente" — va pase "Confirmé" otomatikman apre peman (webhook Bazik)
+      const isFreeRegistration = amount <= 0;
+
+      if (isFreeRegistration) {
+        const { error: insertError } = await supabase.from('inscriptions').insert({
+          nom_complet: formData.nomComplet,
+          email: formData.email,
+          telephone: formData.telephone,
+          niveau_experience: formData.niveauExperience as 'Débutant' | 'Intermédiaire' | 'Avancé',
+          motivation: formData.motivation || null,
+          montant_paye: 0,
+          pourcentage_paye: formData.pourcentagePaye as '25' | '50' | '100',
+          code_promo: promoApplied?.code || null,
+          statut: 'Confirmé' as const,
+          transaction_id: null,
+        });
+
+        if (insertError) {
+          logError(insertError, 'SubmitInscription');
+          throw insertError;
+        }
+
+        if (promoApplied) {
+          const { error: promoError } = await supabase.rpc('increment_promo_usage', { promo_code: promoApplied.code });
+          if (promoError) logError(promoError, 'IncrementPromoUsage');
+        }
+
+        // Tentative d'envoi d'email (optionnel, pas bloquant)
+        const { error: emailError } = await supabase.functions.invoke('send-formation-access', {
+          body: { email: formData.email },
+        });
+        if (emailError) {
+          logError(emailError, 'SendFormationAccess');
+        }
+
+        queryClient.invalidateQueries({ queryKey: ['inscription-count'] });
+        // Afficher l'écran de confirmation avec le lien du cours
+        setIsConfirmed(true);
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Montant > 0 : flux paiement Bazik
+      const transactionId = `KONEKTE-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+
       const { error: insertError } = await supabase.from('inscriptions').insert({
         nom_complet: formData.nomComplet,
         email: formData.email,
@@ -196,10 +237,9 @@ export const InscriptionModal = ({ isOpen, onClose }: InscriptionModalProps) => 
         throw insertError;
       }
 
-      // Étape 2: Créer la transaction Bazik.io et obtenir l'URL de paiement
       const [firstName, ...lastNameParts] = formData.nomComplet.split(' ');
       const lastName = lastNameParts.join(' ') || firstName;
-      
+
       const paymentResult = await createBazikPayment({
         amount,
         transactionId,
@@ -211,33 +251,23 @@ export const InscriptionModal = ({ isOpen, onClose }: InscriptionModalProps) => 
       });
 
       if (!paymentResult.success || !paymentResult.paymentUrl) {
-        toast({ 
-          title: 'Erè peman', 
+        toast({
+          title: 'Erè peman',
           description: paymentResult.message || 'Pa kapab kreye peman an. Enskripsyon w ap tann.',
-          variant: 'destructive'
+          variant: 'destructive',
         });
         queryClient.invalidateQueries({ queryKey: ['inscription-count'] });
         setIsSubmitting(false);
         return;
       }
 
-      // Étape 3: Incrémenter l'utilisation du code promo (avant redirection)
       if (promoApplied) {
         const { error: promoError } = await supabase.rpc('increment_promo_usage', { promo_code: promoApplied.code });
-        if (promoError) {
-          logError(promoError, 'IncrementPromoUsage');
-          // Ne pas bloquer la redirection si l'incrémentation échoue
-        }
+        if (promoError) logError(promoError, 'IncrementPromoUsage');
       }
 
-      // Étape 4: Sauvegarder le transactionId pour le callback
       sessionStorage.setItem('pending_transaction', transactionId);
-      
-      // Étape 5: Rediriger vers l'interface Bazik.io
       window.location.href = paymentResult.paymentUrl;
-      
-      // Note: Le code suivant ne s'exécutera pas car on redirige
-      // Le callback Bazik.io gérera la mise à jour du statut
     } catch (err) {
       logError(err, 'SubmitInscription');
       showError(err, 'Erè enskripsyon');
@@ -246,14 +276,52 @@ export const InscriptionModal = ({ isOpen, onClose }: InscriptionModalProps) => 
     }
   };
 
+  const handleClose = () => {
+    setIsConfirmed(false);
+    onClose();
+  };
+
   if (!isOpen) return null;
+
+  // ✅ Écran de confirmation avec lien d'accès direct au cours
+  if (isConfirmed) {
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-foreground/50 backdrop-blur-sm animate-fade-in">
+        <div className="bg-card rounded-3xl w-full max-w-md p-8 shadow-2xl text-center animate-scale-in">
+          <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
+          <h2 className="text-2xl font-bold mb-2">Enskripsyon Konfime! 🎉</h2>
+          <p className="text-muted-foreground mb-6">
+            Felisitasyon <strong>{formData.nomComplet}</strong>! Ou gen aksè konplè nan fòmasyon an. Klike sou bouton an anba a pou kòmanse aprann.
+          </p>
+          <a
+            href={COURSE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn-primary w-full inline-block mb-4 py-4 text-center"
+          >
+            🚀 Jwenn Aksè Fòmasyon An
+          </a>
+          <div className="bg-muted/50 rounded-xl p-3 mb-4">
+            <p className="text-xs text-muted-foreground mb-1">Oubyen kopye lyen sa a:</p>
+            <p className="text-xs text-primary break-all font-mono">{COURSE_URL}</p>
+          </div>
+          <button
+            onClick={handleClose}
+            className="text-sm text-muted-foreground underline hover:text-foreground transition-colors"
+          >
+            Fèmen
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 bg-foreground/50 backdrop-blur-sm animate-fade-in">
       <div className="bg-card rounded-2xl sm:rounded-3xl w-full max-w-xl max-h-[95vh] sm:max-h-[90vh] overflow-y-auto shadow-2xl animate-scale-in">
         <div className="sticky top-0 bg-card border-b border-border p-4 sm:p-6 flex items-center justify-between rounded-t-2xl sm:rounded-t-3xl z-10">
           <h2 className="text-xl sm:text-2xl font-bold">{t('form_modal_title')}</h2>
-          <button onClick={onClose} className="p-2 hover:bg-muted rounded-xl transition-colors" aria-label="Fèmen">
+          <button onClick={handleClose} className="p-2 hover:bg-muted rounded-xl transition-colors" aria-label="Fèmen">
             <X className="w-5 h-5" />
           </button>
         </div>
@@ -330,7 +398,6 @@ export const InscriptionModal = ({ isOpen, onClose }: InscriptionModalProps) => 
                   type="button" 
                   key={pct} 
                   onClick={() => { 
-                    // CORRECTION: Reset aussi le codePromo quand on change le pourcentage
                     setFormData({ ...formData, pourcentagePaye: pct, codePromo: '' }); 
                     setPromoApplied(null); 
                   }}
@@ -391,6 +458,8 @@ export const InscriptionModal = ({ isOpen, onClose }: InscriptionModalProps) => 
               <>
                 <Loader2 className="w-5 h-5 animate-spin mr-2" /> {t('form_btn_loading')}
               </>
+            ) : calculatePrice() <= 0 ? (
+              'Konfime enskripsyon'
             ) : (
               t('form_btn_submit')
             )}

@@ -36,10 +36,14 @@ serve(async (req) => {
       );
     }
 
-    const { amount, transaction_id, email, phone_number, description, first_name, last_name } = await req.json();
+    const body = await req.json().catch(() => ({}));
+    const { amount, transaction_id, email, phone_number, description, first_name, last_name } = body;
 
-    // Validation
-    if (!amount || !transaction_id || !email) {
+    // Validation (amount can be 0 for 100% promo - client should not call this in that case)
+    const hasAmount = amount !== undefined && amount !== null && amount !== '';
+    const hasTransactionId = transaction_id !== undefined && transaction_id !== null && String(transaction_id).trim() !== '';
+    const hasEmail = email !== undefined && email !== null && String(email).trim() !== '';
+    if (!hasAmount || !hasTransactionId || !hasEmail) {
       return new Response(
         JSON.stringify({ success: false, message: 'Missing required fields: amount, transaction_id, and email' }),
         { 
@@ -49,6 +53,19 @@ serve(async (req) => {
             ...corsHeaders,
           } 
         }
+      );
+    }
+    const amountNum = Number(amount);
+    if (isNaN(amountNum) || amountNum < 0) {
+      return new Response(
+        JSON.stringify({ success: false, message: 'Le montant doit être un nombre positif.' }),
+        { status: 400, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
+      );
+    }
+    if (amountNum === 0) {
+      return new Response(
+        JSON.stringify({ success: false, message: 'Montan 0 - pa bezwen peman. Enskripsyon dwe konfime dirèkteman.' }),
+        { status: 400, headers: { 'Content-Type': 'application/json', ...corsHeaders } }
       );
     }
 
@@ -131,7 +148,7 @@ serve(async (req) => {
     // Étape 2: Créer le paiement MonCash via Bazik
     // Selon la doc Bazik: /moncash/token avec gdes, userID, etc.
     const requestBody = {
-      gdes: amount,
+      gdes: amountNum,
       userID: BAZIK_USER_ID,
       referenceId: transaction_id,
       description: description || 'Inscription séminaire',

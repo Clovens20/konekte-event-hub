@@ -52,4 +52,12 @@ Puis déployer les fonctions :
 ```bash
 supabase functions deploy send-email
 supabase functions deploy payment-callback
+supabase functions deploy send-formation-access
 ```
+
+## send-formation-access
+
+Appelée après une inscription **sans paiement** (ex. code promo 100 %) pour envoyer à l’inscrit l’email avec le lien d’accès à la formation (même email que pour un paiement confirmé).
+
+- Vérifie qu’il existe une inscription **Confirmée** pour l’email fourni, puis appelle `send-email` avec `type: formation_access`.
+- Utilise les mêmes secrets que `send-email` (aucune variable supplémentaire).

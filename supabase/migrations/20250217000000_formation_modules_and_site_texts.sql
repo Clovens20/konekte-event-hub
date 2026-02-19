@@ -46,7 +46,7 @@ CREATE POLICY "Admins can manage site texts"
 
 -- 3. Valeurs par défaut pour site_texts (fòmilè enskripsyon)
 INSERT INTO public.site_texts (key, value) VALUES
-  ('form_modal_title', 'Rezève kote m'),
+  ('form_modal_title', 'Rezève plas mwen'),
   ('form_label_name', 'Non konplè *'),
   ('form_placeholder_name', 'Egz: Jean Baptiste'),
   ('form_label_email', 'Imèl *'),

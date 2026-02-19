@@ -10,7 +10,7 @@ import { toast } from '@/hooks/use-toast';
 import { Loader2, Save } from 'lucide-react';
 
 const FORM_KEYS: { key: string; label: string }[] = [
-  { key: 'form_modal_title', label: 'Tit modil (Rezève kote m)' },
+  { key: 'form_modal_title', label: 'Tit modil (Rezève plas mwen)' },
   { key: 'form_label_name', label: 'Etikèt Non' },
   { key: 'form_placeholder_name', label: 'Placeholder Non' },
   { key: 'form_label_email', label: 'Etikèt Imèl' },
@@ -96,7 +96,7 @@ const AdminFormTexts = () => {
       <Card>
         <CardHeader>
           <CardTitle>Libellés fòmilè</CardTitle>
-          <CardDescription>Chak chan sa a kontwole yon tèks sou fòmilè "Rezève kote m" sou sit la.</CardDescription>
+          <CardDescription>Chak chan sa a kontwole yon tèks sou fòmilè "Rezève plas mwen" sou sit la.</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSave} className="space-y-4">

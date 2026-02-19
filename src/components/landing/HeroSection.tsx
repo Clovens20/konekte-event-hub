@@ -65,8 +65,8 @@ export const HeroSection = ({ onOpenModal }: HeroSectionProps) => {
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 px-2 animate-fade-in" style={{ animationDelay: '0.4s' }}>
             <button onClick={onOpenModal} className="btn-primary group text-base sm:text-lg w-full sm:w-auto">
-              <span className="hidden sm:inline">Rezève kote m kounye a</span>
-              <span className="sm:hidden">Rezève kote m</span>
+              <span className="hidden sm:inline">Rezève plas mwen kounye a</span>
+              <span className="sm:hidden">Rezève plas mwen</span>
               <ArrowRight className="inline-block ml-2 w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
             </button>
             <a href="#programme" className="btn-secondary w-full sm:w-auto text-center">
